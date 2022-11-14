@@ -104,7 +104,7 @@ theme: butterfly
 ## Docs: https://hexo.io/docs/one-command-deployment
 deploy:
   type: git
-  repo: https://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@github.com/Butterfly1000/blademaster.github.io
+  repo: https://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@github.com/Butterfly1000/blademaster.github.io  
   branch: master
 
 aplayer:
