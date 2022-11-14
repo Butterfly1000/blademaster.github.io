@@ -1,0 +1,15 @@
+- class_name: 友情鏈接
+  class_desc: 那些人，那些事
+  link_list:
+    - name: Zach Ke's Notes
+      link: https://kebingzao.com/
+      avatar: https://d33wubrfki0l68.cloudfront.net/6657ba50e702d84afb32fe846bed54fba1a77add/827ae/logo.svg
+      descr: Zach Ke's Notes
+    - name: 个人仓库
+      link: https://github.com/Butterfly1000/blog_hexo
+      avatar: https://d33wubrfki0l68.cloudfront.net/6657ba50e702d84afb32fe846bed54fba1a77add/827ae/logo.svg
+      descr: 个人仓库
+    - name: 博客地址
+      link: https://butterfly1000.github.io/
+      avatar: https://d33wubrfki0l68.cloudfront.net/6657ba50e702d84afb32fe846bed54fba1a77add/827ae/logo.svg
+      descr: 博客地址
