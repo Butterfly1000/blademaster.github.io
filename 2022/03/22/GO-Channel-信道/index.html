@@ -1,0 +1,293 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><title>Channel 信道 | 君莫笑</title><meta name="author" content="King"><meta name="copyright" content="King"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="说到channel，就一定要说一说线程了。任何实际项目，无论大小，并发是必然存在的。并发的存在，就涉及到线程通信。在当下的开发语言中，线程通讯主要有两种，共享内存与消息传递。共享内存一定都很熟悉，通过共同操作同一对象，实现线程间通讯。消息传递即通过类似聊天的方式。golang对并发的处理采用了协程的技术。golang的goroutine就是协程的实现。协程的概念很早就有，简单的理解为轻量级线程，g">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Channel 信道">
+<meta property="og:url" content="http://example.com/2022/03/22/GO-Channel-%E4%BF%A1%E9%81%93/index.html">
+<meta property="og:site_name" content="君莫笑">
+<meta property="og:description" content="说到channel，就一定要说一说线程了。任何实际项目，无论大小，并发是必然存在的。并发的存在，就涉及到线程通信。在当下的开发语言中，线程通讯主要有两种，共享内存与消息传递。共享内存一定都很熟悉，通过共同操作同一对象，实现线程间通讯。消息传递即通过类似聊天的方式。golang对并发的处理采用了协程的技术。golang的goroutine就是协程的实现。协程的概念很早就有，简单的理解为轻量级线程，g">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg">
+<meta property="article:published_time" content="2022-03-22T07:00:09.000Z">
+<meta property="article:modified_time" content="2022-11-14T06:34:56.273Z">
+<meta property="article:author" content="King">
+<meta property="article:tag" content="GO入门">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg"><link rel="shortcut icon" href="/img/logo.jpeg"><link rel="canonical" href="http://example.com/2022/03/22/GO-Channel-%E4%BF%A1%E9%81%93/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Channel 信道',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: false,
+  postUpdate: '2022-11-14 14:34:56'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fi0.hdslb.com%2Fbfs%2Farticle%2Fdaad713b3241336fafc49e60fe087841a651ea2a.jpg&amp;refer=http%3A%2F%2Fi0.hdslb.com&amp;app=2002&amp;size=f9999,10000&amp;q=a80&amp;n=0&amp;g=0n&amp;fmt=auto?sec=1670482197&amp;t=5044f99a86c9b6f7daec8608424f0a9a" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">52</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">14</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 清单</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">君莫笑</a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 清单</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">Channel 信道</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2022-03-22T07:00:09.000Z" title="发表于 2022-03-22 15:00:09">2022-03-22</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2022-11-14T06:34:56.273Z" title="更新于 2022-11-14 14:34:56">2022-11-14</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="Channel 信道"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><p>说到channel，就一定要说一说线程了。任何实际项目，无论大小，并发是必然存在的。并发的存在，就涉及到线程通信。在当下的开发语言中，线程通讯主要有两种，共享内存与消息传递。共享内存一定都很熟悉，通过共同操作同一对象，实现线程间通讯。消息传递即通过类似聊天的方式。golang对并发的处理采用了协程的技术。golang的goroutine就是<strong>协程</strong>的实现。协程的概念很早就有，简单的理解为轻量级线程，goroutine就是为了解决并发任务间的通信而设计的。golang解决通信的理念是：不要通过共享内存来通信,而应该通过<strong>通信</strong>来共享内存。golang解决方案是消息传递机制，消息的传递就是通过channel来实现的。</p>
+<p><strong>Channal是什么？</strong>Channal就是用来通信的，就像Unix下的管道一样，在Go中是这样使用Channel的。</p>
+<p>下面的程序演示了一个goroutine和主程序通信的例程。这个程序足够简单了。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">package main</span><br><span class="line">import &quot;fmt&quot;</span><br><span class="line">func main() &#123;</span><br><span class="line">    //创建一个string类型的channel</span><br><span class="line">    channel := make(chan string)</span><br><span class="line">    //创建一个goroutine向channel里发一个字符串</span><br><span class="line">    go func() &#123; channel &lt;- &quot;hello&quot; &#125;()</span><br><span class="line">    msg := &lt;- channel</span><br><span class="line">    fmt.Println(msg)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>指定channel的buffer</strong></p>
+<p>指定buffer的大小很简单，看下面的程序：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">package main</span><br><span class="line">import &quot;fmt&quot;</span><br><span class="line">func main() &#123;</span><br><span class="line">    channel := make(chan string, 2)</span><br><span class="line">    go func() &#123;</span><br><span class="line">        channel &lt;- &quot;hello&quot;</span><br><span class="line">        channel &lt;- &quot;World&quot;</span><br><span class="line">    &#125;()</span><br><span class="line">    msg1 := &lt;-channel</span><br><span class="line">    msg2 := &lt;-channel</span><br><span class="line">    fmt.Println(msg1, msg2)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>Channel的阻塞</strong></p>
+<p>现在谈一谈对channe阻塞l的理解。　　</p>
+<p>　　发送者角度：对于同一个通道，发送操作（协程或者函数中的），在<strong>接收者准备好之前是阻塞的</strong>。如果chan中的数据<strong>无人接收</strong>，就<strong>无法再给通道传入其他数据</strong>。因为新的输入无法在通道非空的情况下传入。所以发送操作会等待 chan 再次变为可用状态：就是通道值被接收时（可以传入变量）。</p>
+<p>　　接收者角度：对于同一个通道，<strong>接收操作是阻塞的</strong>（协程或函数中的），直到发送者可用：如果通道中没有数据，接收者就阻塞了。</p>
+<p><strong>案例1:</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">package main</span><br><span class="line"></span><br><span class="line">import (</span><br><span class="line">    &quot;fmt&quot;</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">func f1(in chan int) &#123;</span><br><span class="line">    fmt.Println(&lt;-in)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func main() &#123;</span><br><span class="line">    out := make(chan int)</span><br><span class="line">    out &lt;- 2   //13行</span><br><span class="line">    go f1(out)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>运行结果：fatal error: all goroutines are asleep - deadlock!</p>
+<p>这是由于第13行之前不存在对out的接收，所以，对于out &lt;- 2来说，永远是阻塞的，即一直会等下去。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">这很明显，因为out&lt;-2插入后并没有被使用，就一直阻塞在等待被使用，走不到go fl(out)。所以将go fl(out)放在out&lt;-2前面即可。</span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>案例2:</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">package main</span><br><span class="line"></span><br><span class="line">import (</span><br><span class="line">    &quot;fmt&quot;</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">func main() &#123;</span><br><span class="line">    c1 := make(chan int)</span><br><span class="line">    func()&#123;</span><br><span class="line">    	time.Sleep(time.Second*2)</span><br><span class="line">    	c1&lt;-&quot;result 1&quot;</span><br><span class="line">	  &#125;()</span><br><span class="line">		fmt.Println(&quot;c1 is&quot;,&lt;-c1)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>结果：deadlock，因为push和pull永远不可能同时发生，这就是阻塞channel的不当用法。</p>
+<p>解决方法</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">func main() &#123;</span><br><span class="line">    c1 := make(chan int)</span><br><span class="line">    go func()&#123;</span><br><span class="line">    	time.Sleep(time.Second*2)</span><br><span class="line">    	c1&lt;-&quot;result 1&quot;</span><br><span class="line">	  &#125;()</span><br><span class="line">		fmt.Println(&quot;c1 is&quot;,&lt;-c1)</span><br><span class="line">&#125;</span><br><span class="line">#通过在另一个协程中run push代码，使得channel的生产和消费可以同时对接，正常的阻塞使用方式。</span><br></pre></td></tr></table></figure>
+
+<p>另外的解决方法</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">func main() &#123;</span><br><span class="line">    c1 := make(chan int,1)</span><br><span class="line">    func()&#123;</span><br><span class="line">    	time.Sleep(time.Second*2)</span><br><span class="line">    	c1&lt;-&quot;result 1&quot;</span><br><span class="line">	  &#125;()</span><br><span class="line">		fmt.Println(&quot;c1 is&quot;,&lt;-c1)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"># 给channel加一个buffer，只要buffer没用尽，大家就不用阻塞。</span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>案例3:</strong></p>
+<p><strong>注意</strong>，channel默认上是阻塞的，也就是说，如果Channel满了，就阻塞写，如果Channel空了，就阻塞读。于是，我们就可以使用这种特性来同步我们的发送和接收端。</p>
+<p>下面这个例程说明了这一点，代码有点乱，不过我觉得不难理解。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">package main</span><br><span class="line"></span><br><span class="line">import &quot;fmt&quot;</span><br><span class="line">import &quot;time&quot;</span><br><span class="line"></span><br><span class="line">func main() &#123;</span><br><span class="line">    channel := make(chan string) </span><br><span class="line"></span><br><span class="line">    go func() &#123;</span><br><span class="line">        channel &lt;- &quot;hello&quot; //发送方等待接收</span><br><span class="line">        fmt.Println(&quot;write \&quot;hello\&quot; done!&quot;)</span><br><span class="line"></span><br><span class="line">        channel &lt;- &quot;World&quot; //Reader在Sleep，这里在阻塞</span><br><span class="line">        fmt.Println(&quot;write \&quot;World\&quot; done!&quot;)</span><br><span class="line"></span><br><span class="line">        fmt.Println(&quot;Write go sleep...&quot;)</span><br><span class="line">        time.Sleep(3*time.Second)</span><br><span class="line">        channel &lt;- &quot;channel&quot;</span><br><span class="line">        fmt.Println(&quot;write \&quot;channel\&quot; done!&quot;)</span><br><span class="line">    &#125;()</span><br><span class="line"></span><br><span class="line">    time.Sleep(2*time.Second)</span><br><span class="line">    fmt.Println(&quot;Reader Wake up...&quot;) //首先打印</span><br><span class="line"></span><br><span class="line">    msg := &lt;-channel</span><br><span class="line">    fmt.Println(&quot;Reader: &quot;, msg)</span><br><span class="line"></span><br><span class="line">    msg = &lt;-channel</span><br><span class="line">    fmt.Println(&quot;Reader: &quot;, msg)</span><br><span class="line"></span><br><span class="line">    msg = &lt;-channel //Writer在Sleep，这里在阻塞</span><br><span class="line">    fmt.Println(&quot;Reader: &quot;, msg)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>结果：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">Reader Wake up...</span><br><span class="line">Reader:  hello </span><br><span class="line">write &quot;hello&quot; done! </span><br><span class="line">write &quot;World&quot; done! </span><br><span class="line">Write go sleep...</span><br><span class="line">Reader:  World</span><br><span class="line">write &quot;channel&quot; done! </span><br><span class="line">Reader:  channel</span><br><span class="line"></span><br><span class="line">解释：</span><br><span class="line">Reader Wake up...  //没有问题，不解释</span><br><span class="line"></span><br><span class="line">Reader:  hello</span><br><span class="line">因为go func()的代码在前，所以会先执行”channel &lt;- &quot;hello&quot;“，这时候被没有消费，阻塞。</span><br><span class="line">当主程序运行到msg := &lt;-channel，打印了Reader:  hello，然后执行到下面的msg = &lt;-channel，没有数据，被阻塞。</span><br><span class="line"></span><br><span class="line">write &quot;hello&quot; done! </span><br><span class="line">write &quot;World&quot; done! </span><br><span class="line">Write go sleep...</span><br><span class="line">go func()执行channel&lt;-&quot;hello&quot;阻塞被释放，执行代码fmt.Println(&quot;write \&quot;hello\&quot; done!&quot;)；</span><br><span class="line">然后执行channel &lt;- &quot;World&quot;的时候，插入数据，因为主程序已有读取请求，所以没有阻塞，并打印write &quot;World&quot; done!和Write go sleep...; 然后，channel &lt;- &quot;channel&quot;因为需要等待3s未马上执行到，所以会比主程序慢。</span><br><span class="line"></span><br><span class="line">Reader:  World</span><br><span class="line">主程序里面msg = &lt;-channel因channel &lt;- &quot;World&quot;，有数据了，解除阻塞打印Reader:  World，并再执行下面代码msg = &lt;-channel，这时候因为channel &lt;- &quot;channel&quot;还在等待中，再次被阻塞。</span><br><span class="line"></span><br><span class="line">write &quot;channel&quot; done!</span><br><span class="line">直到3s后，channel &lt;- &quot;channel&quot;解除阻塞，打印write &quot;channel&quot; done!</span><br><span class="line"></span><br><span class="line">Reader:  channel</span><br><span class="line">主程序解除阻塞，再打印Reader:  channel</span><br></pre></td></tr></table></figure>
+
+<p><strong>详解go语言 make(chan int, 1) 和 make (chan int) 的区别</strong></p>
+<p><strong>无缓冲区channel</strong></p>
+<p>用make(chan int) 创建的chan, 是无缓冲区的, send 数据到chan 时，在没有协程取出数据的情况下， 会阻塞当前协程的运行。ch &lt;- 后面的代码就不会再运行，直到channel 的数据被接收，当前协程才会继续往下执行。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">package main</span><br><span class="line"></span><br><span class="line">import (</span><br><span class="line">    &quot;fmt&quot;</span><br><span class="line">    &quot;time&quot;</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">func main() &#123;</span><br><span class="line">    ch := make(chan int) // 创建无缓冲channel</span><br><span class="line">    go func() &#123;</span><br><span class="line">      fmt.Println(&quot;time sleep 5 second...&quot;)</span><br><span class="line">      time.Sleep(5 * time.Second)</span><br><span class="line">      &lt;-ch</span><br><span class="line">      fmt.Println(&quot;read...&quot;)</span><br><span class="line">    &#125;()</span><br><span class="line">    fmt.Println(&quot;即将阻塞...&quot;)</span><br><span class="line">    ch &lt;-1  // 协程将会阻塞，等待数据被读取</span><br><span class="line">    fmt.Println(&quot;ch 数据被消费，主协程退出&quot;)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">#结果：</span><br><span class="line">即将阻塞...</span><br><span class="line">time sleep 5 second...</span><br><span class="line">send...</span><br><span class="line">ch 数据被消费，主协程退出</span><br><span class="line"></span><br><span class="line">##这边可以看到接收方的代码先打印，然后打印发送方下面的代码，这个符合逻辑，接收解锁执行，发送解锁执行。</span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>有缓冲区channel</strong></p>
+<p>channel 的缓冲区为1，向channel 发送第一个数据，主协程不会退出。发送第二个时候，缓冲区已经满了， 此时阻塞主协程。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">package main</span><br><span class="line"></span><br><span class="line">import (</span><br><span class="line">    &quot;fmt&quot;</span><br><span class="line">    &quot;time&quot;</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">func main() &#123;</span><br><span class="line">      ch := make(chan int, 1) // 创建有缓冲channel</span><br><span class="line">      go func() &#123;</span><br><span class="line">         fmt.Println(&quot;time sleep 5 second...&quot;)</span><br><span class="line">         time.Sleep(5 * time.Second)</span><br><span class="line">         &lt;-ch</span><br><span class="line">         fmt.Println(&quot;read...&quot;)</span><br><span class="line">      &#125;()</span><br><span class="line">      ch &lt;-1 // 协程不会阻塞，等待数据被读取</span><br><span class="line">      fmt.Println(&quot;第二次发送数据到channel， 即将阻塞&quot;)</span><br><span class="line">      ch &lt;-1 // 第二次发送数据到channel, 在数据没有被读取之前，因为缓冲区满了， 所以会阻塞主协程。</span><br><span class="line">      fmt.Println(&quot;ch 数据被消费，主协程退出&quot;)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">结果：</span><br><span class="line">第二次发送数据到channel， 即将阻塞   //阻塞了，因为buffer为1，等待前面的消费</span><br><span class="line">time sleep 5 second...</span><br><span class="line">read...               //消费了</span><br><span class="line">ch 数据被消费，主协程退出 //插入，执行</span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>多个Channel的select</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">package main</span><br><span class="line">import &quot;time&quot;</span><br><span class="line">import &quot;fmt&quot;</span><br><span class="line">func main() &#123;</span><br><span class="line">    //创建两个channel - c1 c2</span><br><span class="line">    c1 := make(chan string)</span><br><span class="line">    c2 := make(chan string)</span><br><span class="line">    //创建两个goruntine来分别向这两个channel发送数据</span><br><span class="line">    go func() &#123;</span><br><span class="line">        time.Sleep(time.Second * 1)</span><br><span class="line">        c1 &lt;- &quot;Hello&quot;</span><br><span class="line">    &#125;()</span><br><span class="line">    go func() &#123;</span><br><span class="line">        time.Sleep(time.Second * 1)</span><br><span class="line">        c2 &lt;- &quot;World&quot;</span><br><span class="line">    &#125;()</span><br><span class="line">    //使用select来侦听两个channel</span><br><span class="line">    for i := 0; i &lt; 2; i++ &#123;</span><br><span class="line">        select &#123;</span><br><span class="line">          case msg1 := &lt;-c1:</span><br><span class="line">              fmt.Println(&quot;received&quot;, msg1)</span><br><span class="line">          case msg2 := &lt;-c2:</span><br><span class="line">              fmt.Println(&quot;received&quot;, msg2)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>注意：上面的select是阻塞的，所以，才搞出ugly的for i &lt;2这种东西。</p>
+<p><strong>Channel select阻塞的Timeout</strong></p>
+<p>解决上述那个for循环的问题，一般有两种方法：一种是阻塞但有timeout，一种是无阻塞。我们来看看如果给select设置上timeout的。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">for &#123;</span><br><span class="line">    timeout_cnt := 0</span><br><span class="line">    select &#123;</span><br><span class="line">    case msg1 := &lt;-c1:</span><br><span class="line">        fmt.Println(&quot;msg1 received&quot;, msg1)</span><br><span class="line">    case msg2 := &lt;-c2:</span><br><span class="line">        fmt.Println(&quot;msg2 received&quot;, msg2)</span><br><span class="line">    case  &lt;-time.After(time.Second * 30)：</span><br><span class="line">        fmt.Println(&quot;Time Out&quot;)</span><br><span class="line">        time_cnt++</span><br><span class="line">    &#125;</span><br><span class="line">    if time_cnt &gt; 1 &#123;</span><br><span class="line">        break</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>上面代码中高亮的代码主要是用来让select返回的，注意 case中的time.After事件。</p>
+<p><strong>Channel的无阻塞</strong></p>
+<p>好，我们再来看看无阻塞的channel，其实也很简单，就是在select中加入default，如下所示：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">for &#123;</span><br><span class="line">    select &#123;</span><br><span class="line">    case msg1 := &lt;-c1:</span><br><span class="line">        fmt.Println(&quot;received&quot;, msg1)</span><br><span class="line">    case msg2 := &lt;-c2:</span><br><span class="line">        fmt.Println(&quot;received&quot;, msg2)</span><br><span class="line">    default: //default会导致无阻塞</span><br><span class="line">        fmt.Println(&quot;nothing received!&quot;)</span><br><span class="line">        time.Sleep(time.Second)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>Channel的关闭</strong></p>
+<p>关闭Channel可以通知对方内容发送完了，不用再等了。参看下面的例程：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">package main</span><br><span class="line">import &quot;fmt&quot;</span><br><span class="line">import &quot;time&quot;</span><br><span class="line">import &quot;math/rand&quot;</span><br><span class="line">func main() &#123;</span><br><span class="line">    channel := make(chan string)</span><br><span class="line">    rand.Seed(time.Now().Unix())</span><br><span class="line">    //向channel发送随机个数的message</span><br><span class="line">    go func () &#123;</span><br><span class="line">        cnt := rand.Intn(10)</span><br><span class="line">        fmt.Println(&quot;message cnt :&quot;, cnt)</span><br><span class="line">        for i:=0; i&lt;cnt; i++&#123;</span><br><span class="line">            channel &lt;- fmt.Sprintf(&quot;message-%2d&quot;, i)</span><br><span class="line">        &#125;</span><br><span class="line">        close(channel) //关闭Channel</span><br><span class="line">    &#125;()</span><br><span class="line">    var more bool = true</span><br><span class="line">    var msg string</span><br><span class="line">    for more &#123;</span><br><span class="line">        select&#123;</span><br><span class="line">        //channel会返回两个值，一个是内容，一个是还有没有内容</span><br><span class="line">        case msg, more = &lt;- channel:</span><br><span class="line">            if more &#123;</span><br><span class="line">                fmt.Println(msg)</span><br><span class="line">            &#125;else&#123;</span><br><span class="line">                fmt.Println(&quot;channel closed!&quot;)</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>参考文章：</p>
+<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/xiaofengshuyu/p/5190824.html">golang协程——通道channel阻塞</a></p>
+<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/22620172">golang channel阻塞与非阻塞用法</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_31406415/article/details/110521553">详解go语言 make(chan int, 1) 和 make (chan int) 的区别</a></p>
+<p><a target="_blank" rel="noopener" href="https://coolshell.cn/articles/8489.html#goroutine">GO 语言简介（下）— 特性</a></p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="http://example.com">King</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://example.com/2022/03/22/GO-Channel-%E4%BF%A1%E9%81%93/">http://example.com/2022/03/22/GO-Channel-%E4%BF%A1%E9%81%93/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://example.com" target="_blank">君莫笑</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/GO%E5%85%A5%E9%97%A8/">GO入门</a></div><div class="post_share"></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2022/03/23/MQTT%E5%8D%8F%E8%AE%AE%E6%98%AF%E4%B8%AA%E5%95%A5%EF%BC%9F%E8%BF%99%E7%AF%87%E6%96%87%E7%AB%A0%E5%91%8A%E8%AF%89%E4%BD%A0%EF%BC%81/"><img class="prev-cover" src="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">MQTT 协议是个啥？这篇文章告诉你！</div></div></a></div><div class="next-post pull-right"><a href="/2022/03/21/Jenkins/"><img class="next-cover" src="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">Jenkins</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2021/08/16/GO-%E5%8C%85package%E5%92%8Cimport/" title="GO 包package和import"><img class="cover" src="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-08-16</div><div class="title">GO 包package和import</div></div></a></div><div><a href="/2021/08/16/GO-%E6%8E%A7%E5%88%B6%E7%BB%93%E6%9E%84if-else/" title="GO 控制结构if-else"><img class="cover" src="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-08-16</div><div class="title">GO 控制结构if-else</div></div></a></div><div><a href="/2021/08/16/GO-%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B/" title="GO 数据类型(入门篇必读)"><img class="cover" src="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-08-16</div><div class="title">GO 数据类型(入门篇必读)</div></div></a></div><div><a href="/2021/08/16/Go-%E6%8E%A7%E5%88%B6%E7%BB%93%E6%9E%84for%E5%BE%AA%E7%8E%AFloop/" title="Go 控制结构for循环loop"><img class="cover" src="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-08-16</div><div class="title">Go 控制结构for循环loop</div></div></a></div><div><a href="/2021/10/27/go%E7%9A%84%E4%B8%80%E4%BA%9B%E8%AE%A4%E7%9F%A5%E4%BD%BF%E7%94%A8/" title="go的一些认知使用"><img class="cover" src="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-10-27</div><div class="title">go的一些认知使用</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fi0.hdslb.com%2Fbfs%2Farticle%2Fdaad713b3241336fafc49e60fe087841a651ea2a.jpg&amp;refer=http%3A%2F%2Fi0.hdslb.com&amp;app=2002&amp;size=f9999,10000&amp;q=a80&amp;n=0&amp;g=0n&amp;fmt=auto?sec=1670482197&amp;t=5044f99a86c9b6f7daec8608424f0a9a" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">King</div><div class="author-info__description">醉卧沙场君莫笑,古来征战几人回</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">52</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">14</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/Butterfly1000/blademaster.github.io"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">欢迎相互学习交流~</div></div><div class="sticky_layout"><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2022/11/14/hello-world/" title="Hello World"><img src="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Hello World"/></a><div class="content"><a class="title" href="/2022/11/14/hello-world/" title="Hello World">Hello World</a><time datetime="2022-11-14T06:34:56.201Z" title="发表于 2022-11-14 14:34:56">2022-11-14</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/11/08/%E6%B5%8B%E8%AF%95%E6%96%B0%E4%B8%BB%E9%A2%98/" title="测试新主题"><img src="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="测试新主题"/></a><div class="content"><a class="title" href="/2022/11/08/%E6%B5%8B%E8%AF%95%E6%96%B0%E4%B8%BB%E9%A2%98/" title="测试新主题">测试新主题</a><time datetime="2022-11-08T07:51:59.000Z" title="发表于 2022-11-08 15:51:59">2022-11-08</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/06/10/Godoc-%E5%AE%89%E8%A3%85%E4%B8%8E%E4%BD%BF%E7%94%A8/" title="Godoc 安装与使用"><img src="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Godoc 安装与使用"/></a><div class="content"><a class="title" href="/2022/06/10/Godoc-%E5%AE%89%E8%A3%85%E4%B8%8E%E4%BD%BF%E7%94%A8/" title="Godoc 安装与使用">Godoc 安装与使用</a><time datetime="2022-06-10T07:51:14.000Z" title="发表于 2022-06-10 15:51:14">2022-06-10</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/06/10/%E7%AE%80%E5%8D%95%E4%BD%BF%E4%BC%9A%E7%94%A8React/" title="简单使会用React"><img src="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="简单使会用React"/></a><div class="content"><a class="title" href="/2022/06/10/%E7%AE%80%E5%8D%95%E4%BD%BF%E4%BC%9A%E7%94%A8React/" title="简单使会用React">简单使会用React</a><time datetime="2022-06-10T07:44:12.000Z" title="发表于 2022-06-10 15:44:12">2022-06-10</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/06/10/swagger-%E9%83%A8%E7%BD%B2-Mac/" title="swagger 部署(Mac)"><img src="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="swagger 部署(Mac)"/></a><div class="content"><a class="title" href="/2022/06/10/swagger-%E9%83%A8%E7%BD%B2-Mac/" title="swagger 部署(Mac)">swagger 部署(Mac)</a><time datetime="2022-06-10T07:29:26.000Z" title="发表于 2022-06-10 15:29:26">2022-06-10</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2021 - 2022 By King</div><div class="footer_custom_text"><span>改变确实很难，但结果值得冒险</span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div></div></div><div id="search-mask"></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.min.js"></script><script src="/js/search/local-search.js"></script><div class="js-pjax"></div><div class="aplayer no-destroy" data-id="6988686015" data-server="netease" data-type="playlist" data-fixed="true" data-autoplay="true" data-lrcType="-1"> </div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/metingjs/dist/Meting.min.js"></script><script src="https://cdn.jsdelivr.net/npm/pjax/pjax.min.js"></script><script>let pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+var pjax = new Pjax({
+  elements: 'a:not([target="_blank"])',
+  selectors: pjaxSelectors,
+  cacheBust: false,
+  analytics: false,
+  scrollRestoration: false
+})
+
+document.addEventListener('pjax:send', function () {
+
+  // removeEventListener scroll 
+  window.tocScrollFn && window.removeEventListener('scroll', window.tocScrollFn)
+  window.scrollCollect && window.removeEventListener('scroll', scrollCollect)
+
+  document.getElementById('rightside').style.cssText = "opacity: ''; transform: ''"
+  
+  if (window.aplayers) {
+    for (let i = 0; i < window.aplayers.length; i++) {
+      if (!window.aplayers[i].options.fixed) {
+        window.aplayers[i].destroy()
+      }
+    }
+  }
+
+  typeof typed === 'object' && typed.destroy()
+
+  //reset readmode
+  const $bodyClassList = document.body.classList
+  $bodyClassList.contains('read-mode') && $bodyClassList.remove('read-mode')
+
+  typeof disqusjs === 'object' && disqusjs.destroy()
+})
+
+document.addEventListener('pjax:complete', function () {
+  window.refreshFn()
+
+  document.querySelectorAll('script[data-pjax]').forEach(item => {
+    const newScript = document.createElement('script')
+    const content = item.text || item.textContent || item.innerHTML || ""
+    Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+    newScript.appendChild(document.createTextNode(content))
+    item.parentNode.replaceChild(newScript, item)
+  })
+
+  GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+  typeof chatBtnFn === 'function' && chatBtnFn()
+  typeof panguInit === 'function' && panguInit()
+
+  // google analytics
+  typeof gtag === 'function' && gtag('config', '', {'page_path': window.location.pathname});
+
+  // baidu analytics
+  typeof _hmt === 'object' && _hmt.push(['_trackPageview',window.location.pathname]);
+
+  typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+
+  // prismjs
+  typeof Prism === 'object' && Prism.highlightAll()
+})
+
+document.addEventListener('pjax:error', (e) => {
+  if (e.request.status === 404) {
+    pjax.loadUrl('/404.html')
+  }
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
