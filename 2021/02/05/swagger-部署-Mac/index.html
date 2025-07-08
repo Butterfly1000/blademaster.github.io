@@ -1,0 +1,275 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>swagger-部署-Mac | 君莫笑</title><meta name="author" content="King"><meta name="copyright" content="King"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="编辑(swagger-edit)安装一：安装node.js 二：安装http-server 1npm install -g http-server  三：下载 swagger-edit 1git clone https:&#x2F;&#x2F;github.com&#x2F;swagger-api&#x2F;swagger-editor.git  四：运行 12cd path&#x2F;to&#x2F;swagger-edit #就是进入到刚刚克隆的swa">
+<meta property="og:type" content="article">
+<meta property="og:title" content="swagger-部署-Mac">
+<meta property="og:url" content="http://example.com/2021/02/05/swagger-%E9%83%A8%E7%BD%B2-Mac/index.html">
+<meta property="og:site_name" content="君莫笑">
+<meta property="og:description" content="编辑(swagger-edit)安装一：安装node.js 二：安装http-server 1npm install -g http-server  三：下载 swagger-edit 1git clone https:&#x2F;&#x2F;github.com&#x2F;swagger-api&#x2F;swagger-editor.git  四：运行 12cd path&#x2F;to&#x2F;swagger-edit #就是进入到刚刚克隆的swa">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg">
+<meta property="article:published_time" content="2021-02-05T07:43:35.000Z">
+<meta property="article:modified_time" content="2025-07-08T10:55:43.678Z">
+<meta property="article:author" content="King">
+<meta property="article:tag" content="环境配置">
+<meta property="article:tag" content="API">
+<meta property="article:tag" content="Swagger">
+<meta property="article:tag" content="Mac">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "swagger-部署-Mac",
+  "url": "http://example.com/2021/02/05/swagger-%E9%83%A8%E7%BD%B2-Mac/",
+  "image": "https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg",
+  "datePublished": "2021-02-05T07:43:35.000Z",
+  "dateModified": "2025-07-08T10:55:43.678Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "King",
+      "url": "http://example.com"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/logo.jpeg"><link rel="canonical" href="http://example.com/2021/02/05/swagger-%E9%83%A8%E7%BD%B2-Mac/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!true && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'swagger-部署-Mac',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 6.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fi0.hdslb.com%2Fbfs%2Farticle%2Fdaad713b3241336fafc49e60fe087841a651ea2a.jpg&amp;refer=http%3A%2F%2Fi0.hdslb.com&amp;app=2002&amp;size=f9999,10000&amp;q=a80&amp;n=0&amp;g=0n&amp;fmt=auto?sec=1670482197&amp;t=5044f99a86c9b6f7daec8608424f0a9a" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">55</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">82</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">3</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-list"></i><span> 清单</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">君莫笑</span></a><a class="nav-page-title" href="/"><span class="site-name">swagger-部署-Mac</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-list"></i><span> 清单</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">swagger-部署-Mac</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2021-02-05T07:43:35.000Z" title="发表于 2021-02-05 15:43:35">2021-02-05</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-07-08T10:55:43.678Z" title="更新于 2025-07-08 18:55:43">2025-07-08</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h2 id="编辑-swagger-edit"><a href="#编辑-swagger-edit" class="headerlink" title="编辑(swagger-edit)"></a>编辑(swagger-edit)</h2><h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h3><p>一：安装node.js</p>
+<p>二：安装http-server</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install -g http-server</span><br></pre></td></tr></table></figure>
+
+<p>三：下载 <a target="_blank" rel="noopener" href="https://github.com/swagger-api/swagger-editor">swagger-edit</a></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git clone https://github.com/swagger-api/swagger-editor.git</span><br></pre></td></tr></table></figure>
+
+<p>四：运行</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd path/to/swagger-edit #就是进入到刚刚克隆的swagger-edit文件夹下</span><br><span class="line">http-servers swagger-editor</span><br></pre></td></tr></table></figure>
+
+<p>五：查看</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">默认运行在8080 port</span><br><span class="line">在浏览器打开窗口 http://localhost:8080</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="显示部分-swagger-ui"><a href="#显示部分-swagger-ui" class="headerlink" title="显示部分(swagger-ui)"></a>显示部分(swagger-ui)</h2><p>一： 安装：下载 <a target="_blank" rel="noopener" href="https://github.com/swagger-api/swagger-ui">swagger-ui</a></p>
+<p>二：创建一个文件夹用于<strong>swagger项目</strong>，然后初始化到节点</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd path/to/swagger/project</span><br><span class="line">npm init</span><br></pre></td></tr></table></figure>
+
+<p>三：</p>
+<p>然后你可以检查这里有一个<code>package.json</code>；*(npm init后出现<code>package.json</code>很正常)*</p>
+<p>复制dist文件(swagger-ui里面的)到<strong>swagger项目</strong>；*(就是上面的project)*</p>
+<p>安装express模块：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install express</span><br></pre></td></tr></table></figure>
+
+<p>四：</p>
+<p>有一个node_modules文件夹和一个<code>package-lock.json</code></p>
+<p>创建一个index.js在<strong>swagger</strong>项目下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">var express = require(&#x27;express&#x27;); </span><br><span class="line"></span><br><span class="line">var app = express();  </span><br><span class="line">app.use(&#x27;/swagger&#x27;, express.static(&#x27;dist&#x27;));</span><br><span class="line">app.get(&#x27;/&#x27;, function (req, res) &#123;  </span><br><span class="line">    res.send(&#x27;Hello World!&#x27;); </span><br><span class="line">&#125;);  </span><br><span class="line"></span><br><span class="line">app.listen(3000, function () &#123;</span><br><span class="line">  console.log(&#x27;Example app listening on port 3000!&#x27;);  </span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>五：测试</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">node index.js</span><br><span class="line"></span><br><span class="line">http://127.0.0.1:3000/  #Hello World</span><br><span class="line">http://127.0.0.1:3000/swagger/ #页面</span><br></pre></td></tr></table></figure>
+
+
+
+<p>自定义样式：</p>
+<p>修改dist中的<code>index.html(新版在swagger-initializer.js里面了)</code>的url,可以指定到自定义的json<br> 默认的url: “<a target="_blank" rel="noopener" href="http://petstore.swagger.io/v2/swagger.json&quot;">http://petstore.swagger.io/v2/swagger.json&quot;</a><br> 修改成 .&#x2F;swagger.json 或<code>http://localhost:8092/v2/doc</code></p>
+<p><strong>重点：</strong></p>
+<p>你可以下载json例子从swagger editor.</p>
+<p>假如主机不是基于swagger url，则需要指定主机,修改<code>swagger.json</code>里面的host</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">host:****:**   //swagger.json</span><br></pre></td></tr></table></figure>
+
+<h3 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h3><p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/jackey2015/p/11130193.html">swagger 部署(Mac )</a></p>
+<p><a target="_blank" rel="noopener" href="https://dandelioncloud.cn/article/details/1436927564110729218">Linux系列之安装Swagger UI教程</a></p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="http://example.com">King</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="http://example.com/2021/02/05/swagger-%E9%83%A8%E7%BD%B2-Mac/">http://example.com/2021/02/05/swagger-%E9%83%A8%E7%BD%B2-Mac/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="http://example.com" target="_blank">君莫笑</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/">环境配置</a><a class="post-meta__tags" href="/tags/API/">API</a><a class="post-meta__tags" href="/tags/Swagger/">Swagger</a><a class="post-meta__tags" href="/tags/Mac/">Mac</a></div><div class="post-share"><div class="social-share" data-image="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/2021/02/20/zookeeper%E5%AE%89%E8%A3%85/" title="zookeeper安装"><img class="cover" src="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">zookeeper安装</div></div><div class="info-2"><div class="info-item-1">安装【ZooKeeper Notes 2】ZooKeeper快速搭建 zookeeper-3.5.5安装报错：找不到或无法加载主类 org.apache.zookeeper.server.quorum.QuorumPeerMain-新版本zookeeper易犯错误 单机部署 安装jdk 地址：https://mirror.bjtu.edu.cn/reverse/apache-archive/zookeeper/zookeeper-3.7.0/ 拉取wget https://mirror.bjtu.edu.cn/reverse/apache-archive/zookeeper/zookeeper-3.7.0/apache-zookeeper-3.7.0-bin.tar.gz --no-check-certificate 解压 tar -zxvf apache-zookeeper-3.7.0-bin.tar.gz 修改名称mv apache-zookeeper-3.7.0-bin zookeeper-3.7.0  移动到你想的位置 mv zookeeper-3.7.0/ /usr/l...</div></div></div></a><a class="pagination-related" href="/2021/02/04/mysql%E6%95%B0%E6%8D%AE%E5%BA%93%E6%9F%A5%E7%9C%8B%E5%B7%A5%E5%85%B7/" title="mysql数据库查看工具"><img class="cover" src="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">mysql数据库查看工具</div></div><div class="info-2"><div class="info-item-1">工具 Sequel Pro  这个仅支持Mac端，不过查询效率比navicat-premium要快，据说有特别优化加速。  navicat-premium  这个显示的sql执行时间更为接近真实场景。 下载地址：https://macwk.com/soft/navicat-premium </div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/2025/07/04/MCP%E5%AE%89%E8%A3%85/" title="MCP安装指南"><img class="cover" src="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-07-04</div><div class="info-item-2">MCP安装指南</div></div><div class="info-2"><div class="info-item-1">MCP 安装与故障排查指南本指南旨在记录在 macOS 环境下安装和配置模型上下文协议 (MCP) 服务器时遇到的常见问题及其解决方案。核心原则是：为保证稳定性，在 mcp.json 配置文件中应始终使用可执行文件的绝对路径。 1. 前置环境准备MCP 服务器主要依赖于本地的 Node.js 和 Python 环境。 Node.js 环境建议安装 22.0.0 或更高版本。 12345# 查看版本node -v# 使用 Homebrew 安装/升级brew install node  常见问题：Homebrew 提示 node not installed 问题描述: 执行 brew upgrade node 时，系统报错 Error: node not installed，但 node -v 却能正常显示版本号。  原因: 这通常意味着 Node.js 是通过其他方式（例如，官方安装包）安装的，而不是 Homebrew。Homebrew 无法管理非其安装的软件。  解决方案: 卸载已有的 Node.js，然后通过 Homebrew重新安装，以实现统一管理。 12345678910...</div></div></div></a><a class="pagination-related" href="/2025/07/04/mcp_server_git_%E9%97%AE%E9%A2%98%E6%8E%92%E6%9F%A5%E6%97%A5%E5%BF%97/" title="mcp server git 问题排查日志"><img class="cover" src="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-07-04</div><div class="info-item-2">mcp server git 问题排查日志</div></div><div class="info-2"><div class="info-item-1">mcp_server_git 服务安装问题最终排查报告本文档详细记录了解决 mcp.json 中 git 服务因底层 SSL&#x2F;TLS 问题无法安装模块的完整排错流程。这个过程展示了如何从应用层问题逐步深入到系统环境配置，并最终定位和解决根本原因。  第 1 阶段：初步诊断 - 应用层问题初始现象: git 服务”没有生效”。  验证模块安装:  操作: 检查 mcp_server_git 模块是否已为 python@3.13 安装。 命令: python3 -c &quot;import mcp_server_git&quot; 发现: ModuleNotFoundError。模块未安装。   尝试修复:  操作: 尝试使用 pip 进行安装。 命令: python3 -m pip install mcp_server_git 发现: No module named pip。python@3.13 的 pip 环境已损坏。 初步结论: 问题似乎是 python@3.13 环境损坏。     第 2 阶段：深入排查 - 转向备用环境与问题升级思路: 既然 python@3...</div></div></div></a><a class="pagination-related" href="/2021/02/20/zookeeper%E5%AE%89%E8%A3%85/" title="zookeeper安装"><img class="cover" src="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2021-02-20</div><div class="info-item-2">zookeeper安装</div></div><div class="info-2"><div class="info-item-1">安装【ZooKeeper Notes 2】ZooKeeper快速搭建 zookeeper-3.5.5安装报错：找不到或无法加载主类 org.apache.zookeeper.server.quorum.QuorumPeerMain-新版本zookeeper易犯错误 单机部署 安装jdk 地址：https://mirror.bjtu.edu.cn/reverse/apache-archive/zookeeper/zookeeper-3.7.0/ 拉取wget https://mirror.bjtu.edu.cn/reverse/apache-archive/zookeeper/zookeeper-3.7.0/apache-zookeeper-3.7.0-bin.tar.gz --no-check-certificate 解压 tar -zxvf apache-zookeeper-3.7.0-bin.tar.gz 修改名称mv apache-zookeeper-3.7.0-bin zookeeper-3.7.0  移动到你想的位置 mv zookeeper-3.7.0/ /usr/l...</div></div></div></a><a class="pagination-related" href="/2021/10/08/PAW-API%E6%8E%A5%E5%8F%A3%E8%B0%83%E8%AF%95/" title="PAW API接口调试"><img class="cover" src="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2021-10-08</div><div class="info-item-2">PAW API接口调试</div></div><div class="info-2"><div class="info-item-1">推荐PAW一款类似postman的接口调试工具，curl导入效果感觉比postman要好，另外也有请求的多种代码方式源码。 环境本文提供的下载链接仅支持Mac 下载安装链接(破解版)https://macwk.com/soft/paw </div></div></div></a></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fi0.hdslb.com%2Fbfs%2Farticle%2Fdaad713b3241336fafc49e60fe087841a651ea2a.jpg&amp;refer=http%3A%2F%2Fi0.hdslb.com&amp;app=2002&amp;size=f9999,10000&amp;q=a80&amp;n=0&amp;g=0n&amp;fmt=auto?sec=1670482197&amp;t=5044f99a86c9b6f7daec8608424f0a9a" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">King</div><div class="author-info-description">醉卧沙场君莫笑,古来征战几人回</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">55</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">82</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">3</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/Butterfly1000/blademaster.github.io"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">欢迎相互学习交流~</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BC%96%E8%BE%91-swagger-edit"><span class="toc-number">1.</span> <span class="toc-text">编辑(swagger-edit)</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%89%E8%A3%85"><span class="toc-number">1.1.</span> <span class="toc-text">安装</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%98%BE%E7%A4%BA%E9%83%A8%E5%88%86-swagger-ui"><span class="toc-number">2.</span> <span class="toc-text">显示部分(swagger-ui)</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E9%93%BE%E6%8E%A5"><span class="toc-number">2.1.</span> <span class="toc-text">参考链接</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2025/07/08/Cursor%E4%B8%AA%E4%BA%BA%E4%BD%BF%E7%94%A8%E8%AE%B0%E5%BD%95/" title="Cursor个人使用记录"><img src="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Cursor个人使用记录"/></a><div class="content"><a class="title" href="/2025/07/08/Cursor%E4%B8%AA%E4%BA%BA%E4%BD%BF%E7%94%A8%E8%AE%B0%E5%BD%95/" title="Cursor个人使用记录">Cursor个人使用记录</a><time datetime="2025-07-08T09:08:34.000Z" title="发表于 2025-07-08 17:08:34">2025-07-08</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/07/04/mcp_server_git_%E9%97%AE%E9%A2%98%E6%8E%92%E6%9F%A5%E6%97%A5%E5%BF%97/" title="mcp server git 问题排查日志"><img src="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="mcp server git 问题排查日志"/></a><div class="content"><a class="title" href="/2025/07/04/mcp_server_git_%E9%97%AE%E9%A2%98%E6%8E%92%E6%9F%A5%E6%97%A5%E5%BF%97/" title="mcp server git 问题排查日志">mcp server git 问题排查日志</a><time datetime="2025-07-04T08:24:30.000Z" title="发表于 2025-07-04 16:24:30">2025-07-04</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/07/04/MCP%E5%AE%89%E8%A3%85/" title="MCP安装指南"><img src="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="MCP安装指南"/></a><div class="content"><a class="title" href="/2025/07/04/MCP%E5%AE%89%E8%A3%85/" title="MCP安装指南">MCP安装指南</a><time datetime="2025-07-04T08:02:09.000Z" title="发表于 2025-07-04 16:02:09">2025-07-04</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/11/08/%E6%B5%8B%E8%AF%95%E6%96%B0%E4%B8%BB%E9%A2%98/" title="测试新主题"><img src="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="测试新主题"/></a><div class="content"><a class="title" href="/2022/11/08/%E6%B5%8B%E8%AF%95%E6%96%B0%E4%B8%BB%E9%A2%98/" title="测试新主题">测试新主题</a><time datetime="2022-11-08T07:51:59.000Z" title="发表于 2022-11-08 15:51:59">2022-11-08</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/06/10/Godoc-%E5%AE%89%E8%A3%85%E4%B8%8E%E4%BD%BF%E7%94%A8/" title="Godoc 安装与使用"><img src="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Godoc 安装与使用"/></a><div class="content"><a class="title" href="/2022/06/10/Godoc-%E5%AE%89%E8%A3%85%E4%B8%8E%E4%BD%BF%E7%94%A8/" title="Godoc 安装与使用">Godoc 安装与使用</a><time datetime="2022-06-10T07:51:14.000Z" title="发表于 2022-06-10 15:51:14">2022-06-10</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;2021 - 2025 By King</span></div><div class="footer_custom_text"><span>改变确实很难，但结果值得冒险</span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"></div><div class="aplayer no-destroy" data-id="6988686015" data-server="netease" data-type="playlist" data-fixed="true" data-autoplay="true" data-lrcType="-1"> </div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/metingjs/dist/Meting.min.js"></script><script>(() => {
+  const destroyAplayer = () => {
+    if (window.aplayers) {
+      for (let i = 0; i < window.aplayers.length; i++) {
+        if (!window.aplayers[i].options.fixed) {
+          window.aplayers[i].destroy()
+        }
+      }
+    }
+  }
+
+  const runMetingJS = () => {
+    typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+  }
+
+  btf.addGlobalFn('pjaxSend', destroyAplayer, 'destroyAplayer')
+  btf.addGlobalFn('pjaxComplete', loadMeting, 'runMetingJS')
+})()</script><script src="https://cdn.jsdelivr.net/npm/pjax/pjax.min.js"></script><script>(() => {
+  const pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+  window.pjax = new Pjax({
+    elements: 'a:not([target="_blank"])',
+    selectors: pjaxSelectors,
+    cacheBust: false,
+    analytics: false,
+    scrollRestoration: false
+  })
+
+  const triggerPjaxFn = (val) => {
+    if (!val) return
+    Object.values(val).forEach(fn => fn())
+  }
+
+  document.addEventListener('pjax:send', () => {
+    // removeEventListener
+    btf.removeGlobalFnEvent('pjaxSendOnce')
+    btf.removeGlobalFnEvent('themeChange')
+
+    // reset readmode
+    const $bodyClassList = document.body.classList
+    if ($bodyClassList.contains('read-mode')) $bodyClassList.remove('read-mode')
+
+    triggerPjaxFn(window.globalFn.pjaxSend)
+  })
+
+  document.addEventListener('pjax:complete', () => {
+    btf.removeGlobalFnEvent('pjaxCompleteOnce')
+    document.querySelectorAll('script[data-pjax]').forEach(item => {
+      const newScript = document.createElement('script')
+      const content = item.text || item.textContent || item.innerHTML || ""
+      Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+      newScript.appendChild(document.createTextNode(content))
+      item.parentNode.replaceChild(newScript, item)
+    })
+
+    triggerPjaxFn(window.globalFn.pjaxComplete)
+  })
+
+  document.addEventListener('pjax:error', e => {
+    if (e.request.status === 404) {
+      const usePjax = true
+      false
+        ? (usePjax ? pjax.loadUrl('/404.html') : window.location.href = '/404.html')
+        : window.location.href = e.request.responseURL
+    }
+  })
+})()</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

@@ -1,0 +1,239 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>当访问不到类似http-xxxx-9001内容时 | 君莫笑</title><meta name="author" content="King"><meta name="copyright" content="King"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="查看是否使用阿里云，确认安全组是否开启端口 查看防火墙端口是否开启https:&#x2F;&#x2F;www.cnblogs.com&#x2F;zxg-blog&#x2F;p&#x2F;9835263.html 查看netstat -lnpt | grep “端口” 查看端口是否允许 查看是否是0.0.0.0，而非127.0.0.1 通过telnet 0.0.0.0 9001 通过curl 0.0.0.0 9001 通过ping 0.0.0.0">
+<meta property="og:type" content="article">
+<meta property="og:title" content="当访问不到类似http-xxxx-9001内容时">
+<meta property="og:url" content="http://example.com/2021/04/25/%E5%BD%93%E8%AE%BF%E9%97%AE%E4%B8%8D%E5%88%B0%E7%B1%BB%E4%BC%BChttp-xxxx-9001%E5%86%85%E5%AE%B9%E6%97%B6/index.html">
+<meta property="og:site_name" content="君莫笑">
+<meta property="og:description" content="查看是否使用阿里云，确认安全组是否开启端口 查看防火墙端口是否开启https:&#x2F;&#x2F;www.cnblogs.com&#x2F;zxg-blog&#x2F;p&#x2F;9835263.html 查看netstat -lnpt | grep “端口” 查看端口是否允许 查看是否是0.0.0.0，而非127.0.0.1 通过telnet 0.0.0.0 9001 通过curl 0.0.0.0 9001 通过ping 0.0.0.0">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg">
+<meta property="article:published_time" content="2021-04-25T07:47:35.000Z">
+<meta property="article:modified_time" content="2025-07-08T10:53:56.584Z">
+<meta property="article:author" content="King">
+<meta property="article:tag" content="网络">
+<meta property="article:tag" content="问题排查">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "当访问不到类似http-xxxx-9001内容时",
+  "url": "http://example.com/2021/04/25/%E5%BD%93%E8%AE%BF%E9%97%AE%E4%B8%8D%E5%88%B0%E7%B1%BB%E4%BC%BChttp-xxxx-9001%E5%86%85%E5%AE%B9%E6%97%B6/",
+  "image": "https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg",
+  "datePublished": "2021-04-25T07:47:35.000Z",
+  "dateModified": "2025-07-08T10:53:56.584Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "King",
+      "url": "http://example.com"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/logo.jpeg"><link rel="canonical" href="http://example.com/2021/04/25/%E5%BD%93%E8%AE%BF%E9%97%AE%E4%B8%8D%E5%88%B0%E7%B1%BB%E4%BC%BChttp-xxxx-9001%E5%86%85%E5%AE%B9%E6%97%B6/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!true && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '当访问不到类似http-xxxx-9001内容时',
+  isHighlightShrink: false,
+  isToc: false,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 6.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fi0.hdslb.com%2Fbfs%2Farticle%2Fdaad713b3241336fafc49e60fe087841a651ea2a.jpg&amp;refer=http%3A%2F%2Fi0.hdslb.com&amp;app=2002&amp;size=f9999,10000&amp;q=a80&amp;n=0&amp;g=0n&amp;fmt=auto?sec=1670482197&amp;t=5044f99a86c9b6f7daec8608424f0a9a" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">55</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">82</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">3</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-list"></i><span> 清单</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">君莫笑</span></a><a class="nav-page-title" href="/"><span class="site-name">当访问不到类似http-xxxx-9001内容时</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-list"></i><span> 清单</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">当访问不到类似http-xxxx-9001内容时</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2021-04-25T07:47:35.000Z" title="发表于 2021-04-25 15:47:35">2021-04-25</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-07-08T10:53:56.584Z" title="更新于 2025-07-08 18:53:56">2025-07-08</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><ol>
+<li>查看是否使用阿里云，确认安全组是否开启端口</li>
+<li>查看防火墙端口是否开启<br><code>https://www.cnblogs.com/zxg-blog/p/9835263.html</code></li>
+<li>查看netstat -lnpt | grep “端口” 查看端口是否允许</li>
+<li>查看是否是0.0.0.0，而非127.0.0.1</li>
+<li>通过telnet 0.0.0.0 9001</li>
+<li>通过curl 0.0.0.0 9001</li>
+<li>通过ping 0.0.0.0 9001</li>
+<li>端口是否被占用</li>
+</ol>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="http://example.com">King</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="http://example.com/2021/04/25/%E5%BD%93%E8%AE%BF%E9%97%AE%E4%B8%8D%E5%88%B0%E7%B1%BB%E4%BC%BChttp-xxxx-9001%E5%86%85%E5%AE%B9%E6%97%B6/">http://example.com/2021/04/25/%E5%BD%93%E8%AE%BF%E9%97%AE%E4%B8%8D%E5%88%B0%E7%B1%BB%E4%BC%BChttp-xxxx-9001%E5%86%85%E5%AE%B9%E6%97%B6/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="http://example.com" target="_blank">君莫笑</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E7%BD%91%E7%BB%9C/">网络</a><a class="post-meta__tags" href="/tags/%E9%97%AE%E9%A2%98%E6%8E%92%E6%9F%A5/">问题排查</a></div><div class="post-share"><div class="social-share" data-image="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/2021/04/26/GO-time%E7%AF%87/" title="GO time篇"><img class="cover" src="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">GO time篇</div></div><div class="info-2"><div class="info-item-1">go Time篇当前日期 time.Now().Format(“2006-01-02”) 当前时间 time.Now().Format(“2006-01-02 15:04:05”) 年月日 year, mon, day :&#x3D; time.Now().UTC().Date()      mon格式为month需要转换 也可以单独获取 加一天 time.Parse(“2006-01-02 15:04:05”, date).AddDate(0, 0, 1).Format(“2006-01-02 15:04:05”) 减一天 time.Parse(“2006-01-02 15:04:05”, date).AddDate(0, 0, -1).Format(“2006-01-02 15:04:05”) 0 0 1 前面两个零分别代表年，月    date初始日期 golang包time用法详解 golang map 获取某个值 https://blog.csdn.net/weixin_39524842/article/details/111890157 </div></div></div></a><a class="pagination-related" href="/2021/04/12/%E5%85%B3%E4%BA%8Egit%E6%92%A4%E5%9B%9E%E5%86%85%E5%AE%B9%E7%9A%84%E6%80%9D%E8%80%83/" title="关于git撤回内容的思考"><img class="cover" src="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">关于git撤回内容的思考</div></div><div class="info-2"><div class="info-item-1">本地如果是在本地就直接用Reset Git Reset 三种模式 </div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/2022/03/20/ICE%E5%8D%8F%E8%AE%AE%E4%B8%8BNAT%E7%A9%BF%E8%B6%8A%E7%9A%84%E5%AE%9E%E7%8E%B0%EF%BC%88STUN-TURN%EF%BC%89/" title="ICE协议下NAT穿越的实现（STUN&amp;TURN）"><img class="cover" src="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2022-03-20</div><div class="info-item-2">ICE协议下NAT穿越的实现（STUN&amp;TURN）</div></div><div class="info-2"><div class="info-item-1">这一篇感觉写得真好。 NAT是什么？看上一篇《P2P通信原理与实现》  NAT的副作用以及解决方案  国内移动无线网络运营商在链路上一段时间内没有数据通讯后, 会淘汰NAT表中的对应项, 造成链路中断。 这是NAT带来的第一个副作用：NAT超时:而国内的运营商一般NAT超时的时间为5分钟，所以通常我们TCP长连接的心跳设置的时间间隔为3-5分钟。 而第二个副作用就是：我们这边文章要提到的NAT墙。NAT会有一个机制，所有外界对内网的请求，到达NAT的时候，都会被NAT所丢弃，这样如果我们处于一个NAT设备后面，我们将无法得到任何外界的数据。 但是这种机制有一个解决方案：就是如果我们A主动往B发送一条信息，这样A就在自己的NAT上打了一个B的洞。这样A的这条消息到达B的NAT的时候，虽然被丢掉了，但是如果B这个时候在给A发信息，到达A的NAT的时候，就可以从A之前打的那个洞中，发送给到A手上了。 简单来讲，就是如果A和B要进行通信，那么得事先A发一条信息给B，B发一条信息给A。这样提前在各自的NAT上打了对方的洞，这样下一次A和B之间就可以进行通信了。   四种NAT类型，看上一篇...</div></div></div></a><a class="pagination-related" href="/2022/03/23/MQTT%E5%8D%8F%E8%AE%AE%E6%98%AF%E4%B8%AA%E5%95%A5%EF%BC%9F%E8%BF%99%E7%AF%87%E6%96%87%E7%AB%A0%E5%91%8A%E8%AF%89%E4%BD%A0%EF%BC%81/" title="MQTT 协议是个啥？这篇文章告诉你！"><img class="cover" src="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2022-03-23</div><div class="info-item-2">MQTT 协议是个啥？这篇文章告诉你！</div></div><div class="info-2"><div class="info-item-1">什么是 MQTT 协议MQTT 协议的全称是 Message Queuing Telemetry Transport，翻译为消息队列传输探测，它是 ISO 标准下的一种基于发布 - 订阅模式的消息协议，它是基于 TCP&#x2F;IP 协议簇的，它是为了改善网络设备硬件的性能和网络的性能来设计的。MQTT 一般多用于 IoT 即物联网上，广泛应用于工业级别的应用场景，比如汽车、制造、石油、天然气等。 ISO标准是指由『 国际标准化组织 (International Organization for Standardization)， ISO 』制订的标准。 MQTT 基础上面我们解释了 MQTT 协议的基本概念，MQTT 协议总结一点就是一种轻量级的二进制协议，MQTT 协议与 HTTP 相比具有一个明显的优势：数据包开销较小，数据包开销小就意味着更容易进行网络传输。还有一个优势就是 MQTT 在客户端容易实现，而且具有易用性，非常适合当今资源有限的设备。  你可能对这些概念有些讳莫如深，为什么具有 xxx 这种特性呢？这就需要从 MQTT 的设计说起了。  MQTT 协议由 A...</div></div></div></a><a class="pagination-related" href="/2022/03/16/P2P%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86%E4%B8%8E%E5%AE%9E%E7%8E%B0/" title="P2P通信原理与实现"><img class="cover" src="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2022-03-16</div><div class="info-item-2">P2P通信原理与实现</div></div><div class="info-2"><div class="info-item-1">当今互联网到处存在着一些中间件(Middle Boxes),如NAT和防火墙,导致两个(不在同一内网)中的客户端无法直接通信。 目前部署的中间件多都是在C&#x2F;S架构(client&#x2F;server)上设计的,其中相对隐匿的客户机主动向周知的服务端(拥有静态IP地址和DNS名称)发起链接请求. 大多数中间件实现了一种非对称的通讯模型,即内网中的主机可以初始化对外的链接,而外网的主机却不能初始化对内网的链接, 除非经过中间件管理员特殊配置。  前言  在中间件为常见的NAPT的情况下（也是本文主要讨论的）,内网中的客户端没有单独的公网IP地址, 而是通过NAPT转换,和其他同一内网用户共享一个公网IP. 这种内网主机隐藏在中间件后的不可访问性对于一些客户端软件如浏览器来说并不是一个问题,因为其只需要初始化对外的链接,从某方面来看反而还对隐私保护有好处。 然而在P2P应用中, 内网主机（客户端）需要对另外的终端（Peer）直接建立链接,但是发起者和响应者可能在不同的中间件后面, 两者都没有公网IP地址. 而外部对NAT公网IP和端口主动的链接或数据都会因内网未请求被丢弃掉...</div></div></div></a><a class="pagination-related" href="/2021/08/03/%E7%BD%91%E7%BB%9C%E6%8E%A9%E7%A0%81/" title="网络掩码"><img class="cover" src="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2021-08-03</div><div class="info-item-2">网络掩码</div></div><div class="info-2"><div class="info-item-1">ip地址的组成（网络位+主机位）IP地址采用分层结构； IP地址是由网络号（net ID）与主机号（host ID）两部分组成的。 根据不同的取值范围，IP地址可以分为五类；IP地址中的前5位用于标识IP地址的类别： 1234567891011A类地址的第一位为0；  127 =&gt; 0(128)1(64)1(32)1(16) 1(8)1(4)1(2)1(1)网络位7(8-1)位，主机号24位(32-7-1 = 24)B类地址的前两位为10； 191 =&gt; 1(128)0(64)1(32)1(16) 1(8)1(4)1(2)1(1)网络位14(8+8-2)位，主机号16位(32-14-2 = 16)C类地址的前三位为110；223 =&gt; 1(128)1(64)0(32)1(16) 1(8)1(4)1(2)1(1)网络位21(8+8+8-3)位，主机号位(32-21-3 = 8)D类地址的前四位为1110；E类地址的前五位为11110；  实际大多通过子网掩码来区分网络位和主机位，子网掩码跟IP地址一一对应，子网掩码为1的是网络位，为0的是主机位。如：192.168...</div></div></div></a><a class="pagination-related" href="/2025/07/04/mcp_server_git_%E9%97%AE%E9%A2%98%E6%8E%92%E6%9F%A5%E6%97%A5%E5%BF%97/" title="mcp server git 问题排查日志"><img class="cover" src="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-07-04</div><div class="info-item-2">mcp server git 问题排查日志</div></div><div class="info-2"><div class="info-item-1">mcp_server_git 服务安装问题最终排查报告本文档详细记录了解决 mcp.json 中 git 服务因底层 SSL&#x2F;TLS 问题无法安装模块的完整排错流程。这个过程展示了如何从应用层问题逐步深入到系统环境配置，并最终定位和解决根本原因。  第 1 阶段：初步诊断 - 应用层问题初始现象: git 服务”没有生效”。  验证模块安装:  操作: 检查 mcp_server_git 模块是否已为 python@3.13 安装。 命令: python3 -c &quot;import mcp_server_git&quot; 发现: ModuleNotFoundError。模块未安装。   尝试修复:  操作: 尝试使用 pip 进行安装。 命令: python3 -m pip install mcp_server_git 发现: No module named pip。python@3.13 的 pip 环境已损坏。 初步结论: 问题似乎是 python@3.13 环境损坏。     第 2 阶段：深入排查 - 转向备用环境与问题升级思路: 既然 python@3...</div></div></div></a></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fi0.hdslb.com%2Fbfs%2Farticle%2Fdaad713b3241336fafc49e60fe087841a651ea2a.jpg&amp;refer=http%3A%2F%2Fi0.hdslb.com&amp;app=2002&amp;size=f9999,10000&amp;q=a80&amp;n=0&amp;g=0n&amp;fmt=auto?sec=1670482197&amp;t=5044f99a86c9b6f7daec8608424f0a9a" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">King</div><div class="author-info-description">醉卧沙场君莫笑,古来征战几人回</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">55</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">82</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">3</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/Butterfly1000/blademaster.github.io"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">欢迎相互学习交流~</div></div><div class="sticky_layout"><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2025/07/08/Cursor%E4%B8%AA%E4%BA%BA%E4%BD%BF%E7%94%A8%E8%AE%B0%E5%BD%95/" title="Cursor个人使用记录"><img src="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Cursor个人使用记录"/></a><div class="content"><a class="title" href="/2025/07/08/Cursor%E4%B8%AA%E4%BA%BA%E4%BD%BF%E7%94%A8%E8%AE%B0%E5%BD%95/" title="Cursor个人使用记录">Cursor个人使用记录</a><time datetime="2025-07-08T09:08:34.000Z" title="发表于 2025-07-08 17:08:34">2025-07-08</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/07/04/mcp_server_git_%E9%97%AE%E9%A2%98%E6%8E%92%E6%9F%A5%E6%97%A5%E5%BF%97/" title="mcp server git 问题排查日志"><img src="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="mcp server git 问题排查日志"/></a><div class="content"><a class="title" href="/2025/07/04/mcp_server_git_%E9%97%AE%E9%A2%98%E6%8E%92%E6%9F%A5%E6%97%A5%E5%BF%97/" title="mcp server git 问题排查日志">mcp server git 问题排查日志</a><time datetime="2025-07-04T08:24:30.000Z" title="发表于 2025-07-04 16:24:30">2025-07-04</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/07/04/MCP%E5%AE%89%E8%A3%85/" title="MCP安装指南"><img src="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="MCP安装指南"/></a><div class="content"><a class="title" href="/2025/07/04/MCP%E5%AE%89%E8%A3%85/" title="MCP安装指南">MCP安装指南</a><time datetime="2025-07-04T08:02:09.000Z" title="发表于 2025-07-04 16:02:09">2025-07-04</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/11/08/%E6%B5%8B%E8%AF%95%E6%96%B0%E4%B8%BB%E9%A2%98/" title="测试新主题"><img src="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="测试新主题"/></a><div class="content"><a class="title" href="/2022/11/08/%E6%B5%8B%E8%AF%95%E6%96%B0%E4%B8%BB%E9%A2%98/" title="测试新主题">测试新主题</a><time datetime="2022-11-08T07:51:59.000Z" title="发表于 2022-11-08 15:51:59">2022-11-08</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/06/10/Godoc-%E5%AE%89%E8%A3%85%E4%B8%8E%E4%BD%BF%E7%94%A8/" title="Godoc 安装与使用"><img src="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Godoc 安装与使用"/></a><div class="content"><a class="title" href="/2022/06/10/Godoc-%E5%AE%89%E8%A3%85%E4%B8%8E%E4%BD%BF%E7%94%A8/" title="Godoc 安装与使用">Godoc 安装与使用</a><time datetime="2022-06-10T07:51:14.000Z" title="发表于 2022-06-10 15:51:14">2022-06-10</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;2021 - 2025 By King</span></div><div class="footer_custom_text"><span>改变确实很难，但结果值得冒险</span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"></div><div class="aplayer no-destroy" data-id="6988686015" data-server="netease" data-type="playlist" data-fixed="true" data-autoplay="true" data-lrcType="-1"> </div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/metingjs/dist/Meting.min.js"></script><script>(() => {
+  const destroyAplayer = () => {
+    if (window.aplayers) {
+      for (let i = 0; i < window.aplayers.length; i++) {
+        if (!window.aplayers[i].options.fixed) {
+          window.aplayers[i].destroy()
+        }
+      }
+    }
+  }
+
+  const runMetingJS = () => {
+    typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+  }
+
+  btf.addGlobalFn('pjaxSend', destroyAplayer, 'destroyAplayer')
+  btf.addGlobalFn('pjaxComplete', loadMeting, 'runMetingJS')
+})()</script><script src="https://cdn.jsdelivr.net/npm/pjax/pjax.min.js"></script><script>(() => {
+  const pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+  window.pjax = new Pjax({
+    elements: 'a:not([target="_blank"])',
+    selectors: pjaxSelectors,
+    cacheBust: false,
+    analytics: false,
+    scrollRestoration: false
+  })
+
+  const triggerPjaxFn = (val) => {
+    if (!val) return
+    Object.values(val).forEach(fn => fn())
+  }
+
+  document.addEventListener('pjax:send', () => {
+    // removeEventListener
+    btf.removeGlobalFnEvent('pjaxSendOnce')
+    btf.removeGlobalFnEvent('themeChange')
+
+    // reset readmode
+    const $bodyClassList = document.body.classList
+    if ($bodyClassList.contains('read-mode')) $bodyClassList.remove('read-mode')
+
+    triggerPjaxFn(window.globalFn.pjaxSend)
+  })
+
+  document.addEventListener('pjax:complete', () => {
+    btf.removeGlobalFnEvent('pjaxCompleteOnce')
+    document.querySelectorAll('script[data-pjax]').forEach(item => {
+      const newScript = document.createElement('script')
+      const content = item.text || item.textContent || item.innerHTML || ""
+      Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+      newScript.appendChild(document.createTextNode(content))
+      item.parentNode.replaceChild(newScript, item)
+    })
+
+    triggerPjaxFn(window.globalFn.pjaxComplete)
+  })
+
+  document.addEventListener('pjax:error', e => {
+    if (e.request.status === 404) {
+      const usePjax = true
+      false
+        ? (usePjax ? pjax.loadUrl('/404.html') : window.location.href = '/404.html')
+        : window.location.href = e.request.responseURL
+    }
+  })
+})()</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
