@@ -1,0 +1,346 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>君莫笑 - 醉卧沙场君莫笑,古来征战几人回</title><meta name="author" content="King"><meta name="copyright" content="King"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="醉卧沙场君莫笑,古来征战几人回">
+<meta property="og:type" content="website">
+<meta property="og:title" content="君莫笑">
+<meta property="og:url" content="http://example.com/index.html">
+<meta property="og:site_name" content="君莫笑">
+<meta property="og:description" content="醉卧沙场君莫笑,古来征战几人回">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fi0.hdslb.com%2Fbfs%2Farticle%2Fdaad713b3241336fafc49e60fe087841a651ea2a.jpg&refer=http%3A%2F%2Fi0.hdslb.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1670482197&t=5044f99a86c9b6f7daec8608424f0a9a">
+<meta property="article:author" content="King">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fi0.hdslb.com%2Fbfs%2Farticle%2Fdaad713b3241336fafc49e60fe087841a651ea2a.jpg&refer=http%3A%2F%2Fi0.hdslb.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1670482197&t=5044f99a86c9b6f7daec8608424f0a9a"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "君莫笑",
+  "url": "http://example.com/"
+}</script><link rel="shortcut icon" href="/img/logo.jpeg"><link rel="canonical" href="http://example.com/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!true && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '君莫笑',
+  isHighlightShrink: false,
+  isToc: false,
+  pageType: 'home'
+}</script><meta name="generator" content="Hexo 6.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fi0.hdslb.com%2Fbfs%2Farticle%2Fdaad713b3241336fafc49e60fe087841a651ea2a.jpg&amp;refer=http%3A%2F%2Fi0.hdslb.com&amp;app=2002&amp;size=f9999,10000&amp;q=a80&amp;n=0&amp;g=0n&amp;fmt=auto?sec=1670482197&amp;t=5044f99a86c9b6f7daec8608424f0a9a" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">53</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">14</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-list"></i><span> 清单</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div></div></div></div><div class="page" id="body-wrap"><header class="full_page" id="page-header" style="background-image: url(/img/bg.jpeg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">君莫笑</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-list"></i><span> 清单</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="site-info"><h1 id="site-title">君莫笑</h1><div id="site-subtitle"><span id="subtitle"></span></div></div><div id="scroll-down"><i class="fas fa-angle-down scroll-down-effects"></i></div></header><main class="layout" id="content-inner"><div class="recent-posts nc" id="recent-posts"><div class="recent-post-items"><div class="recent-post-item"><div class="post_cover left"><a href="/2025/07/08/Cursor%E4%B8%AA%E4%BA%BA%E4%BD%BF%E7%94%A8%E8%AE%B0%E5%BD%95/" title="Cursor个人使用记录"><img class="post-bg" src="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Cursor个人使用记录"></a></div><div class="recent-post-info"><a class="article-title" href="/2025/07/08/Cursor%E4%B8%AA%E4%BA%BA%E4%BD%BF%E7%94%A8%E8%AE%B0%E5%BD%95/" title="Cursor个人使用记录">Cursor个人使用记录</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2025-07-08T09:08:34.000Z" title="发表于 2025-07-08 17:08:34">2025-07-08</time></span></div><div class="content">自定义mode  在Agent、Ask、Manual，现在还有个Background，在这些之外，还可以自定义mode。   我们可以设置自定义mode的一些功能：  自定义命名，说明这个mode是作用于什么，例如”代码审查员” 选择可以使用的Tools，Search、Edit、Run(终端)、MCP(选择MCP工具) 还可以添加自定义介绍    **注: 使用前必须先在 设置 - Chat - Custom Modes 开启 ** AI模型初始的AI模型可能很少，需要再 设置 - Models 开启。 MCP工具这个其他文档有详细介绍， 设置 - Tools &amp; Integrations  MCP Tools栏 - + New MCP Server MCP就是给AI权限，让AI可以去进行一些操作，举个例子fetch赋予AI自主抓取网页分析的能力，Git让AI可以查看Git分支内容。这样就可以让AI自行去分析，而不是我们获取信息再丢给AI处理。 Rules规则由于AI对于项目的一些习惯和规则是不熟悉的，需要进行设置。否则AI很可能会出现发散式思考，偏离需求。另外，AI也可...</div></div></div><div class="recent-post-item"><div class="post_cover right"><a href="/2025/07/08/hello-world/" title="Hello World"><img class="post-bg" src="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Hello World"></a></div><div class="recent-post-info"><a class="article-title" href="/2025/07/08/hello-world/" title="Hello World">Hello World</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2025-07-08T06:20:40.474Z" title="发表于 2025-07-08 14:20:40">2025-07-08</time></span></div><div class="content">Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub. Quick StartCreate a new post1$ hexo new &quot;My New Post&quot;  More info: Writing Run server1$ hexo server  More info: Server Generate static files1$ hexo generate  More info: Generating Deploy to remote sites1$ hexo deploy  More info: Deployment </div></div></div><div class="recent-post-item"><div class="post_cover left"><a href="/2022/11/08/%E6%B5%8B%E8%AF%95%E6%96%B0%E4%B8%BB%E9%A2%98/" title="测试新主题"><img class="post-bg" src="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="测试新主题"></a></div><div class="recent-post-info"><a class="article-title" href="/2022/11/08/%E6%B5%8B%E8%AF%95%E6%96%B0%E4%B8%BB%E9%A2%98/" title="测试新主题">测试新主题</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2022-11-08T07:51:59.000Z" title="发表于 2022-11-08 15:51:59">2022-11-08</time></span></div></div></div><div class="recent-post-item"><div class="post_cover right"><a href="/2022/06/10/Godoc-%E5%AE%89%E8%A3%85%E4%B8%8E%E4%BD%BF%E7%94%A8/" title="Godoc 安装与使用"><img class="post-bg" src="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Godoc 安装与使用"></a></div><div class="recent-post-info"><a class="article-title" href="/2022/06/10/Godoc-%E5%AE%89%E8%A3%85%E4%B8%8E%E4%BD%BF%E7%94%A8/" title="Godoc 安装与使用">Godoc 安装与使用</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2022-06-10T07:51:14.000Z" title="发表于 2022-06-10 15:51:14">2022-06-10</time></span></div><div class="content">简单操作：首先要确保，go env的环境变量GOBIN配置正确。 使用vim打开.bash_profile文件； 打开以后，如下输入内容： 12345export GOPATH=/Users/douxiaobo/goexport GOBIN=$GOPATH/binexport PATH=$PATH:$GOBIN  然后，到项目根目录下执行go get -v -u golang.org/x/tools/cmd/godoc 最后，执行 godoc -http=:6060,访问浏览器localhost:6060,点击Packages，然后找到项目目录，点击查看。 更多看这一篇就够了 </div></div></div><div class="recent-post-item"><div class="post_cover left"><a href="/2022/06/10/%E7%AE%80%E5%8D%95%E4%BD%BF%E4%BC%9A%E7%94%A8React/" title="简单使会用React"><img class="post-bg" src="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="简单使会用React"></a></div><div class="recent-post-info"><a class="article-title" href="/2022/06/10/%E7%AE%80%E5%8D%95%E4%BD%BF%E4%BC%9A%E7%94%A8React/" title="简单使会用React">简单使会用React</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2022-06-10T07:44:12.000Z" title="发表于 2022-06-10 15:44:12">2022-06-10</time></span></div><div class="content">环境Linux Centos7 一、安装node.js(npm)12345678910111213141516171819202122232425262728293031323334### yum安装npm(完成这个即可)curl --silent --location https://rpm.nodesource.com/setup_10.x | bash -yum install -y nodejsnpm install -g cnpm --registry=https://registry.npm.taobao.orgnpm config set registry https://registry.npm.taobao.org### 常用操作npm initnpm installnpm run buildnpm -v### node.js升级//安装npm升级工具npm install -g n//安装最近的稳定版本n stable---------------------------  installing : node-v16.15.0       mkdir : /u...</div></div></div><div class="recent-post-item"><div class="post_cover right"><a href="/2022/06/10/swagger-%E9%83%A8%E7%BD%B2-Mac/" title="swagger 部署(Mac)"><img class="post-bg" src="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="swagger 部署(Mac)"></a></div><div class="recent-post-info"><a class="article-title" href="/2022/06/10/swagger-%E9%83%A8%E7%BD%B2-Mac/" title="swagger 部署(Mac)">swagger 部署(Mac)</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2022-06-10T07:29:26.000Z" title="发表于 2022-06-10 15:29:26">2022-06-10</time></span></div><div class="content">编辑(swagger-edit)安装一：安装node.js 二：安装http-server 1npm install -g http-server  三：下载 swagger-edit 1git clone https://github.com/swagger-api/swagger-editor.git  四：运行 12cd path/to/swagger-edit #就是进入到刚刚克隆的swagger-edit文件夹下http-servers swagger-editor  五：查看 12默认运行在8080 port在浏览器打开窗口 http://localhost:8080    显示部分(swagger-ui)一： 安装：下载 swagger-ui 二：创建一个文件夹用于swagger项目，然后初始化到节点 12cd path/to/swagger/projectnpm init  三： 然后你可以检查这里有一个package.json；*(npm init后出现package.json很正常)* 复制dist文件(swagger-ui里面的)到swagger项目；*(就...</div></div></div><div class="recent-post-item"><div class="post_cover left"><a href="/2022/04/02/Dockerfile/" title="Dockerfile"><img class="post-bg" src="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Dockerfile"></a></div><div class="recent-post-info"><a class="article-title" href="/2022/04/02/Dockerfile/" title="Dockerfile">Dockerfile</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2022-04-02T06:00:12.000Z" title="发表于 2022-04-02 14:00:12">2022-04-02</time></span></div><div class="content">Dockerfile是Docker中用来自动化构建镜像的配置文件，在Dockerfile中，包含了构建镜像过程中需要执行的命令、参数以及其他操作，并且支持以#开头的注释行。 Dockerfile结构大致分为四部分：  基础镜像信息 维护者信息 镜像操作指令 镜像启动时执行的命令  DockerFile构建过程 docker从基础镜像运行一个容器 执行一条指令并对容器做修改  执行类似docker commit的操作提交一个新的镜像层 docker再基于刚提交的镜像运行一个新的容器 执行dockerfile中的下一条指令直到所有指令都执行完成  Dockerfile构建过程是以基础镜像为基础的，每一条指令构建一层镜像，因此每一条指令的内容，就是描述该层应当如何构建。以此，有了Dockerfile，我们可以方便的定制自己额外的需求，只需在Dockerfile里添加或者修改指令，重新构建即可。 构建步骤 编写一个 dockerfile 文件 docker build构建成为一个镜像 docker run运行镜像 Docker push 发布镜像（DockerHub、阿里云像仓库）  D...</div></div></div><div class="recent-post-item"><div class="post_cover right"><a href="/2022/03/24/Vernemq%E9%9B%86%E7%BE%A4%E6%90%AD%E5%BB%BA%E3%80%81%E7%9B%91%E6%8E%A7%E6%98%AF%E7%9C%9F%E7%9A%84%E5%A5%BD%E7%94%A8/" title="Vernemq集群搭建、监控是真的好用"><img class="post-bg" src="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Vernemq集群搭建、监控是真的好用"></a></div><div class="recent-post-info"><a class="article-title" href="/2022/03/24/Vernemq%E9%9B%86%E7%BE%A4%E6%90%AD%E5%BB%BA%E3%80%81%E7%9B%91%E6%8E%A7%E6%98%AF%E7%9C%9F%E7%9A%84%E5%A5%BD%E7%94%A8/" title="Vernemq集群搭建、监控是真的好用">Vernemq集群搭建、监控是真的好用</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2022-03-24T07:55:29.000Z" title="发表于 2022-03-24 15:55:29">2022-03-24</time></span></div><div class="content">安装下载 1wget https://github.com/vernemq/vernemq/releases/download/1.12.3/vernemq-1.12.3.centos7.x86_64.rpm  yum安装 1$ yum -y install ./vernemq-1.12.3.centos7.x86_64.rpm  安装完成后会自动生成配置文件**&#x2F;etc&#x2F;vernemq&#x2F;vernemq.conf**，修改配置文件，仅修改而不是全部替换 12345678910111213141516# 是否开启匿名访问，开启匿名访问后将不验证用户名及密码allow_anonymous = off# 若配置集群需要开发内部通讯allow_register_during_netsplit = onallow_publish_during_netsplit = onallow_subscribe_during_netsplit = onallow_unsubscribe_during_netsplit = on# 配置MQTT可连接地址以及端口0.0.0....</div></div></div><div class="recent-post-item"><div class="post_cover left"><a href="/2022/03/24/%E5%BD%93%E8%AE%BF%E9%97%AE%E4%B8%8D%E5%88%B0%E7%B1%BB%E4%BC%BChttp-xxxx-9001%E5%86%85%E5%AE%B9%E6%97%B6/" title="当访问不到类似http:xxxx:9001内容时"><img class="post-bg" src="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="当访问不到类似http:xxxx:9001内容时"></a></div><div class="recent-post-info"><a class="article-title" href="/2022/03/24/%E5%BD%93%E8%AE%BF%E9%97%AE%E4%B8%8D%E5%88%B0%E7%B1%BB%E4%BC%BChttp-xxxx-9001%E5%86%85%E5%AE%B9%E6%97%B6/" title="当访问不到类似http:xxxx:9001内容时">当访问不到类似http:xxxx:9001内容时</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2022-03-24T07:51:32.000Z" title="发表于 2022-03-24 15:51:32">2022-03-24</time></span></div><div class="content"> 查看是否使用阿里云，确认安全组是否开启端口 查看防火墙端口是否开启https://www.cnblogs.com/zxg-blog/p/9835263.html 查看netstat -lnpt | grep “端口” 查看端口是否允许 查看是否是0.0.0.0，而非127.0.0.1 通过telnet 0.0.0.0 9001 通过curl 0.0.0.0 9001 通过ping 0.0.0.0 9001 端口是否被占用  </div></div></div><div class="recent-post-item"><div class="post_cover right"><a href="/2022/03/24/MongoDB%E5%B8%B8%E8%A7%81%E6%93%8D%E4%BD%9C/" title="MongoDB常见操作"><img class="post-bg" src="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="MongoDB常见操作"></a></div><div class="recent-post-info"><a class="article-title" href="/2022/03/24/MongoDB%E5%B8%B8%E8%A7%81%E6%93%8D%E4%BD%9C/" title="MongoDB常见操作">MongoDB常见操作</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2022-03-24T02:56:28.000Z" title="发表于 2022-03-24 10:56:28">2022-03-24</time></span></div><div class="content">评价查询操作符$mod - 取模计算示例 1234&gt;db.c1.find()结果：&#123;&quot;_id&quot;:ObjectId(&quot;4fb4af85afa87dc1bed94330&quot;),&quot;age&quot;:7,&quot;length_1&quot;:30&#125;&#123;&quot;_id&quot;:ObjectId(&quot;4fb4af89afa87dc1bed94331&quot;),&quot;age&quot;:8,&quot;length_1&quot;:30&#125;&#123;&quot;_id&quot;:ObjectId(&quot;4fb4af8cafa87dc1bed94332&quot;),&quot;age&quot;:6,&quot;length_1&quot;:30&#125;  查询age取模6等于1的数据，如下面的代码所示： 1234&gt;db.c1.find(&#123;age:&#123;$mod:[6,1]&#125;&#125;)结果：&#123;&quot;_id&q...</div></div></div></div><nav id="pagination"><div class="pagination"><span class="page-number current">1</span><a class="page-number" href="/page/2/#content-inner">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/#content-inner">6</a><a class="extend next" rel="next" href="/page/2/#content-inner"><i class="fas fa-chevron-right fa-fw"></i></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fi0.hdslb.com%2Fbfs%2Farticle%2Fdaad713b3241336fafc49e60fe087841a651ea2a.jpg&amp;refer=http%3A%2F%2Fi0.hdslb.com&amp;app=2002&amp;size=f9999,10000&amp;q=a80&amp;n=0&amp;g=0n&amp;fmt=auto?sec=1670482197&amp;t=5044f99a86c9b6f7daec8608424f0a9a" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">King</div><div class="author-info-description">醉卧沙场君莫笑,古来征战几人回</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">53</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">14</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/Butterfly1000/blademaster.github.io"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">欢迎相互学习交流~</div></div><div class="sticky_layout"><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2025/07/08/Cursor%E4%B8%AA%E4%BA%BA%E4%BD%BF%E7%94%A8%E8%AE%B0%E5%BD%95/" title="Cursor个人使用记录"><img src="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Cursor个人使用记录"/></a><div class="content"><a class="title" href="/2025/07/08/Cursor%E4%B8%AA%E4%BA%BA%E4%BD%BF%E7%94%A8%E8%AE%B0%E5%BD%95/" title="Cursor个人使用记录">Cursor个人使用记录</a><time datetime="2025-07-08T09:08:34.000Z" title="发表于 2025-07-08 17:08:34">2025-07-08</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/07/08/hello-world/" title="Hello World"><img src="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Hello World"/></a><div class="content"><a class="title" href="/2025/07/08/hello-world/" title="Hello World">Hello World</a><time datetime="2025-07-08T06:20:40.474Z" title="发表于 2025-07-08 14:20:40">2025-07-08</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/11/08/%E6%B5%8B%E8%AF%95%E6%96%B0%E4%B8%BB%E9%A2%98/" title="测试新主题"><img src="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="测试新主题"/></a><div class="content"><a class="title" href="/2022/11/08/%E6%B5%8B%E8%AF%95%E6%96%B0%E4%B8%BB%E9%A2%98/" title="测试新主题">测试新主题</a><time datetime="2022-11-08T07:51:59.000Z" title="发表于 2022-11-08 15:51:59">2022-11-08</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/06/10/Godoc-%E5%AE%89%E8%A3%85%E4%B8%8E%E4%BD%BF%E7%94%A8/" title="Godoc 安装与使用"><img src="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Godoc 安装与使用"/></a><div class="content"><a class="title" href="/2022/06/10/Godoc-%E5%AE%89%E8%A3%85%E4%B8%8E%E4%BD%BF%E7%94%A8/" title="Godoc 安装与使用">Godoc 安装与使用</a><time datetime="2022-06-10T07:51:14.000Z" title="发表于 2022-06-10 15:51:14">2022-06-10</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/06/10/%E7%AE%80%E5%8D%95%E4%BD%BF%E4%BC%9A%E7%94%A8React/" title="简单使会用React"><img src="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="简单使会用React"/></a><div class="content"><a class="title" href="/2022/06/10/%E7%AE%80%E5%8D%95%E4%BD%BF%E4%BC%9A%E7%94%A8React/" title="简单使会用React">简单使会用React</a><time datetime="2022-06-10T07:44:12.000Z" title="发表于 2022-06-10 15:44:12">2022-06-10</time></div></div></div></div><div class="card-widget card-tags"><div class="item-headline"><i class="fas fa-tags"></i><span>标签</span></div><div class="card-tag-cloud"><a href="/tags/%E5%B7%A5%E5%85%B7%E6%8E%A8%E8%8D%90/" style="font-size: 1.5em; color: #99a9bf">工具推荐</a> <a href="/tags/%E7%BD%91%E7%BB%9C/" style="font-size: 1.5em; color: #99a9bf">网络</a> <a href="/tags/mysql/" style="font-size: 1.2em; color: #999da3">mysql</a> <a href="/tags/MQTT/" style="font-size: 1.1em; color: #999">MQTT</a> <a href="/tags/Docker/" style="font-size: 1.3em; color: #99a1ac">Docker</a> <a href="/tags/Redis/" style="font-size: 1.1em; color: #999">Redis</a> <a href="/tags/%E9%9A%8F%E7%AC%94/" style="font-size: 1.3em; color: #99a1ac">随笔</a> <a href="/tags/GO/" style="font-size: 1.4em; color: #99a5b6">GO</a> <a href="/tags/%E7%BB%86%E8%8A%82/" style="font-size: 1.1em; color: #999">细节</a> <a href="/tags/%E4%BC%98%E5%8C%96%E6%A1%88%E4%BE%8B/" style="font-size: 1.1em; color: #999">优化案例</a> <a href="/tags/gopush/" style="font-size: 1.1em; color: #999">gopush</a> <a href="/tags/Go/" style="font-size: 1.1em; color: #999">Go</a> <a href="/tags/%E7%9F%A5%E8%AF%86%E7%82%B9/" style="font-size: 1.5em; color: #99a9bf">知识点</a> <a href="/tags/GO%E5%85%A5%E9%97%A8/" style="font-size: 1.4em; color: #99a5b6">GO入门</a></div></div><div class="card-widget card-archives">
+    <div class="item-headline">
+      <i class="fas fa-archive"></i>
+      <span>归档</span>
+      <a class="card-more-btn" href="/archives/"
+            title="查看更多">
+            <i class="fas fa-angle-right"></i>
+          </a>
+    </div>
+  
+    <ul class="card-archive-list">
+      
+        <li class="card-archive-list-item">
+          <a class="card-archive-list-link" href="/archives/2025/07/">
+            <span class="card-archive-list-date">
+              七月 2025
+            </span>
+            <span class="card-archive-list-count">2</span>
+          </a>
+        </li>
+      
+        <li class="card-archive-list-item">
+          <a class="card-archive-list-link" href="/archives/2022/11/">
+            <span class="card-archive-list-date">
+              十一月 2022
+            </span>
+            <span class="card-archive-list-count">1</span>
+          </a>
+        </li>
+      
+        <li class="card-archive-list-item">
+          <a class="card-archive-list-link" href="/archives/2022/06/">
+            <span class="card-archive-list-date">
+              六月 2022
+            </span>
+            <span class="card-archive-list-count">3</span>
+          </a>
+        </li>
+      
+        <li class="card-archive-list-item">
+          <a class="card-archive-list-link" href="/archives/2022/04/">
+            <span class="card-archive-list-date">
+              四月 2022
+            </span>
+            <span class="card-archive-list-count">1</span>
+          </a>
+        </li>
+      
+        <li class="card-archive-list-item">
+          <a class="card-archive-list-link" href="/archives/2022/03/">
+            <span class="card-archive-list-date">
+              三月 2022
+            </span>
+            <span class="card-archive-list-count">11</span>
+          </a>
+        </li>
+      
+        <li class="card-archive-list-item">
+          <a class="card-archive-list-link" href="/archives/2021/11/">
+            <span class="card-archive-list-date">
+              十一月 2021
+            </span>
+            <span class="card-archive-list-count">2</span>
+          </a>
+        </li>
+      
+        <li class="card-archive-list-item">
+          <a class="card-archive-list-link" href="/archives/2021/10/">
+            <span class="card-archive-list-date">
+              十月 2021
+            </span>
+            <span class="card-archive-list-count">9</span>
+          </a>
+        </li>
+      
+        <li class="card-archive-list-item">
+          <a class="card-archive-list-link" href="/archives/2021/09/">
+            <span class="card-archive-list-date">
+              九月 2021
+            </span>
+            <span class="card-archive-list-count">2</span>
+          </a>
+        </li>
+      
+    </ul>
+  </div><div class="card-widget card-webinfo"><div class="item-headline"><i class="fas fa-chart-line"></i><span>网站信息</span></div><div class="webinfo"><div class="webinfo-item"><div class="item-name">文章数目 :</div><div class="item-count">53</div></div><div class="webinfo-item"><div class="item-name">最后更新时间 :</div><div class="item-count" id="last-push-date" data-lastPushDate="2025-07-08T09:09:35.056Z"><i class="fa-solid fa-spinner fa-spin"></i></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;2021 - 2025 By King</span></div><div class="footer_custom_text"><span>改变确实很难，但结果值得冒险</span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"><script>window.typedJSFn = {
+  init: str => {
+    window.typed = new Typed('#subtitle', Object.assign({
+      strings: str,
+      startDelay: 300,
+      typeSpeed: 150,
+      loop: true,
+      backSpeed: 50,
+    }, null))
+  },
+  run: subtitleType => {
+    if (true) {
+      if (typeof Typed === 'function') {
+        subtitleType()
+      } else {
+        btf.getScript('https://cdn.jsdelivr.net/npm/typed.js/dist/typed.umd.min.js').then(subtitleType)
+      }
+    } else {
+      subtitleType()
+    }
+  },
+  processSubtitle: (content, extraContents = []) => {
+    if (true) {
+      const sub = ["Never put off till tomorrow what you can do today"].slice()
+
+      if (extraContents.length > 0) {
+        sub.unshift(...extraContents)
+      }
+
+      if (typeof content === 'string') {
+        sub.unshift(content)
+      } else if (Array.isArray(content)) {
+        sub.unshift(...content)
+      }
+
+      sub.length > 0 && typedJSFn.init(sub)
+    } else {
+      document.getElementById('subtitle').textContent = typeof content === 'string' ? content :
+        (Array.isArray(content) && content.length > 0 ? content[0] : '')
+    }
+  }
+}
+btf.addGlobalFn('pjaxSendOnce', () => { typed.destroy() }, 'typedDestroy')
+</script><script>function subtitleType () {
+  typedJSFn.processSubtitle(["Never put off till tomorrow what you can do today"])
+}
+typedJSFn.run(subtitleType)</script></div><div class="aplayer no-destroy" data-id="6988686015" data-server="netease" data-type="playlist" data-fixed="true" data-autoplay="true" data-lrcType="-1"> </div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/metingjs/dist/Meting.min.js"></script><script>(() => {
+  const destroyAplayer = () => {
+    if (window.aplayers) {
+      for (let i = 0; i < window.aplayers.length; i++) {
+        if (!window.aplayers[i].options.fixed) {
+          window.aplayers[i].destroy()
+        }
+      }
+    }
+  }
+
+  const runMetingJS = () => {
+    typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+  }
+
+  btf.addGlobalFn('pjaxSend', destroyAplayer, 'destroyAplayer')
+  btf.addGlobalFn('pjaxComplete', loadMeting, 'runMetingJS')
+})()</script><script src="https://cdn.jsdelivr.net/npm/pjax/pjax.min.js"></script><script>(() => {
+  const pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+  window.pjax = new Pjax({
+    elements: 'a:not([target="_blank"])',
+    selectors: pjaxSelectors,
+    cacheBust: false,
+    analytics: false,
+    scrollRestoration: false
+  })
+
+  const triggerPjaxFn = (val) => {
+    if (!val) return
+    Object.values(val).forEach(fn => fn())
+  }
+
+  document.addEventListener('pjax:send', () => {
+    // removeEventListener
+    btf.removeGlobalFnEvent('pjaxSendOnce')
+    btf.removeGlobalFnEvent('themeChange')
+
+    // reset readmode
+    const $bodyClassList = document.body.classList
+    if ($bodyClassList.contains('read-mode')) $bodyClassList.remove('read-mode')
+
+    triggerPjaxFn(window.globalFn.pjaxSend)
+  })
+
+  document.addEventListener('pjax:complete', () => {
+    btf.removeGlobalFnEvent('pjaxCompleteOnce')
+    document.querySelectorAll('script[data-pjax]').forEach(item => {
+      const newScript = document.createElement('script')
+      const content = item.text || item.textContent || item.innerHTML || ""
+      Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+      newScript.appendChild(document.createTextNode(content))
+      item.parentNode.replaceChild(newScript, item)
+    })
+
+    triggerPjaxFn(window.globalFn.pjaxComplete)
+  })
+
+  document.addEventListener('pjax:error', e => {
+    if (e.request.status === 404) {
+      const usePjax = true
+      false
+        ? (usePjax ? pjax.loadUrl('/404.html') : window.location.href = '/404.html')
+        : window.location.href = e.request.responseURL
+    }
+  })
+})()</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

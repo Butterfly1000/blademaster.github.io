@@ -1,0 +1,299 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>ICE协议下NAT穿越的实现（STUN&amp;TURN） | 君莫笑</title><meta name="author" content="King"><meta name="copyright" content="King"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="这一篇感觉写得真好。 NAT是什么？看上一篇《P2P通信原理与实现》  NAT的副作用以及解决方案  国内移动无线网络运营商在链路上一段时间内没有数据通讯后, 会淘汰NAT表中的对应项, 造成链路中断。 这是NAT带来的第一个副作用：NAT超时:而国内的运营商一般NAT超时的时间为5分钟，所以通常我们TCP长连接的心跳设置的时间间隔为3-5分钟。 而第二个副作用就是：我们这边文章要提到的NAT墙。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ICE协议下NAT穿越的实现（STUN&amp;TURN）">
+<meta property="og:url" content="http://example.com/2022/03/20/ICE%E5%8D%8F%E8%AE%AE%E4%B8%8BNAT%E7%A9%BF%E8%B6%8A%E7%9A%84%E5%AE%9E%E7%8E%B0%EF%BC%88STUN-TURN%EF%BC%89/index.html">
+<meta property="og:site_name" content="君莫笑">
+<meta property="og:description" content="这一篇感觉写得真好。 NAT是什么？看上一篇《P2P通信原理与实现》  NAT的副作用以及解决方案  国内移动无线网络运营商在链路上一段时间内没有数据通讯后, 会淘汰NAT表中的对应项, 造成链路中断。 这是NAT带来的第一个副作用：NAT超时:而国内的运营商一般NAT超时的时间为5分钟，所以通常我们TCP长连接的心跳设置的时间间隔为3-5分钟。 而第二个副作用就是：我们这边文章要提到的NAT墙。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg">
+<meta property="article:published_time" content="2022-03-20T02:55:20.000Z">
+<meta property="article:modified_time" content="2025-07-08T06:20:40.458Z">
+<meta property="article:author" content="King">
+<meta property="article:tag" content="网络">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "ICE协议下NAT穿越的实现（STUN&TURN）",
+  "url": "http://example.com/2022/03/20/ICE%E5%8D%8F%E8%AE%AE%E4%B8%8BNAT%E7%A9%BF%E8%B6%8A%E7%9A%84%E5%AE%9E%E7%8E%B0%EF%BC%88STUN-TURN%EF%BC%89/",
+  "image": "https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg",
+  "datePublished": "2022-03-20T02:55:20.000Z",
+  "dateModified": "2025-07-08T06:20:40.458Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "King",
+      "url": "http://example.com"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/logo.jpeg"><link rel="canonical" href="http://example.com/2022/03/20/ICE%E5%8D%8F%E8%AE%AE%E4%B8%8BNAT%E7%A9%BF%E8%B6%8A%E7%9A%84%E5%AE%9E%E7%8E%B0%EF%BC%88STUN-TURN%EF%BC%89/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!true && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'ICE协议下NAT穿越的实现（STUN&TURN）',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 6.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fi0.hdslb.com%2Fbfs%2Farticle%2Fdaad713b3241336fafc49e60fe087841a651ea2a.jpg&amp;refer=http%3A%2F%2Fi0.hdslb.com&amp;app=2002&amp;size=f9999,10000&amp;q=a80&amp;n=0&amp;g=0n&amp;fmt=auto?sec=1670482197&amp;t=5044f99a86c9b6f7daec8608424f0a9a" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">53</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">14</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-list"></i><span> 清单</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">君莫笑</span></a><a class="nav-page-title" href="/"><span class="site-name">ICE协议下NAT穿越的实现（STUN&amp;TURN）</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-list"></i><span> 清单</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">ICE协议下NAT穿越的实现（STUN&amp;TURN）</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2022-03-20T02:55:20.000Z" title="发表于 2022-03-20 10:55:20">2022-03-20</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-07-08T06:20:40.458Z" title="更新于 2025-07-08 14:20:40">2025-07-08</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><p>这一篇感觉写得真好。</p>
+<p>NAT是什么？看上一篇《P2P通信原理与实现》</p>
+<blockquote>
+<p>NAT的副作用以及解决方案</p>
+</blockquote>
+<p>国内移动无线网络运营商在链路上一段时间内没有数据通讯后, 会淘汰NAT表中的对应项, 造成链路中断。</p>
+<h5 id="这是NAT带来的第一个副作用：NAT超时"><a href="#这是NAT带来的第一个副作用：NAT超时" class="headerlink" title="这是NAT带来的第一个副作用：NAT超时:"></a>这是NAT带来的第一个副作用：NAT超时:</h5><p>而国内的运营商一般NAT超时的时间为5分钟，所以通常我们TCP长连接的心跳设置的时间间隔为3-5分钟。</p>
+<h5 id="而第二个副作用就是：我们这边文章要提到的NAT墙。"><a href="#而第二个副作用就是：我们这边文章要提到的NAT墙。" class="headerlink" title="而第二个副作用就是：我们这边文章要提到的NAT墙。"></a>而第二个副作用就是：我们这边文章要提到的NAT墙。</h5><p>NAT会有一个机制，所有外界对内网的请求，到达NAT的时候，都会被NAT所丢弃，这样如果我们处于一个NAT设备后面，我们将无法得到任何外界的数据。</p>
+<p>但是这种机制有一个解决方案：就是如果我们A主动往B发送一条信息，这样A就在自己的NAT上打了一个B的洞。这样A的这条消息到达B的NAT的时候，虽然被丢掉了，但是如果B这个时候在给A发信息，到达A的NAT的时候，就可以从A之前打的那个洞中，发送给到A手上了。</p>
+<p>简单来讲，就是<strong>如果A和B要进行通信，那么得事先A发一条信息给B，B发一条信息给A。这样提前在各自的NAT上打了对方的洞，这样下一次A和B之间就可以进行通信了。</strong></p>
+<blockquote>
+<p> 四种NAT类型，看上一篇《P2P通信原理与实现》后就完全能理解下面这段话了。</p>
+</blockquote>
+<p>RFC3489 中将 NAT 的实现分为四大类：</p>
+<ol>
+<li>Full Cone NAT                          （完全锥形 NAT）</li>
+<li>Restricted Cone NAT                 （限制锥形 NAT ，可以理解为 IP 限制，Port不限制）</li>
+<li>Port Restricted Cone NAT          （端口限制锥形 NAT，IP+Port 限制）</li>
+<li>Symmetric NAT                        （对称 NAT）</li>
+</ol>
+<p>其中完全最上层的完全锥形NAT的穿透性最好，而最下层的对称形NAT的安全性最高。</p>
+<p>简单来讲讲这4种类型的NAT代表什么：</p>
+<ul>
+<li>如果一个NAT是Full Cone NAT，那么无论什么IP地址访问，都不会被NAT墙掉（这种基本很少）。</li>
+<li>Restricted Cone NAT，仅仅是经过打洞的IP能穿越NAT，但是不限于Port。</li>
+<li>Port Restricted Cone NAT，仅仅是经过打洞的IP+端口号能穿越NAT。</li>
+<li>Symmetric NAT 这种也是仅仅是经过打洞的IP+端口号能穿越NAT，但是它有一个最大的和Cone类型的NAT的区别，它对外的公网Port是不停的变化的：<br>比如A是一个对称NAT，那么A给B发信息，经过NAT映射到一个Port:10000，A给C发信息，经过NAT映射到一个Port:10001，这样会导致一个问题，我们服务器根本无法协调进行NAT打洞。</li>
+</ul>
+<p>至于为什么无法协调打洞，下面我们会从STUN和TURN的工作原理来讲。</p>
+<blockquote>
+<h4 id="STUN和TURN的实现"><a href="#STUN和TURN的实现" class="headerlink" title="STUN和TURN的实现"></a>STUN和TURN的实现</h4></blockquote>
+<h5 id="1-STUN-Server主要做了两件事："><a href="#1-STUN-Server主要做了两件事：" class="headerlink" title="1.STUN Server主要做了两件事："></a>1.STUN Server主要做了两件事：</h5><ul>
+<li>接受客户端的请求，并且把客户端的公网IP、Port封装到ICE Candidate中。</li>
+</ul>
+<ul>
+<li>通过一个复杂的机制，<strong>得到客户端的NAT类型</strong>。</li>
+</ul>
+<p>完成了这些STUN Server就会这些基本信息发送回客户端，然后根据NAT类型，来判断是否需要TURN服务器协调进行下一步工作。</p>
+<p>我们来讲讲这两步具体做了什么吧：<br>第一件事就不用说了，其实就是得到客户端的请求，把源IP和Port拿到，添加到ICE Candidate中。</p>
+<h6 id="来讲讲第二件事，STUN是如何判断NAT的类型的："><a href="#来讲讲第二件事，STUN是如何判断NAT的类型的：" class="headerlink" title="来讲讲第二件事，STUN是如何判断NAT的类型的："></a>来讲讲第二件事，STUN是如何判断NAT的类型的：</h6><p>假设B是客户端，C是STUN服务器，C有两个IP分别为IP1和IP2（至于为什么要两个IP，接着往下看）：</p>
+<h6 id="STEP1-判断客户端是否在NAT后："><a href="#STEP1-判断客户端是否在NAT后：" class="headerlink" title="STEP1.判断客户端是否在NAT后："></a>STEP1.判断客户端是否在NAT后：</h6><p>B向C的<strong>IP1的port1端口</strong>发送一个UDP 包。C收到这个包后，会把它收到包的<strong>源</strong>IP和port写到UDP包中，然后把此包通过IP1和port1发还给B。</p>
+<p>这边还给B包中的IP和port也就是B的NAT的外网 IP和port，也就是说你在STEP1中就得到了B的NAT的外网IP。</p>
+<p>熟悉NAT工作原理的朋友可以知道，C返回给B的这个UDP包B一定收到**(因为由B主动先发送给C，B的NAT已经记录下了C的IP和端口)**。如果在你的应用中，向一个STUN服务器发送数据包后，你没有收到STUN的任何回应包，那只有两种可能：1、STUN服务器不存在，或者你弄错了port。2、你的NAT拒绝一切UDP包从外部向内部通过。</p>
+<p>当B收到此UDP后，把此UDP中的IP和自己的IP做比较，如果是一样的，就说明自己是在<strong>公网</strong>，下步NAT将去探测防火墙类型，这边不做介绍。如果不一样，说明有NAT的存在，系统进行STEP2的操作。</p>
+<h6 id="STEP2-判断是否处于Full-Cone-Nat下："><a href="#STEP2-判断是否处于Full-Cone-Nat下：" class="headerlink" title="STEP2.判断是否处于Full Cone Nat下："></a>STEP2.判断是否处于Full Cone Nat下：</h6><p>B向C的IP1发送一个UDP包，请求C通过另外一个IP2和PORT（不同与SETP1的IP1）向B返回一个UDP数据包（现在知道为什么C要有两个IP了吧，虽然还不理解为什么，呵呵）。</p>
+<p>我们来分析一下，如果B收到了这个数据包，那说明什么？说明NAT来着不拒，不对数据包进行任何过滤，这也就是STUN标准中的full cone NAT。遗憾的是，Full Cone Nat太少了，这也意味着你能收到这个数据包的可能性不大。如果没收到，那么系统进行STEP3的操作。</p>
+<h6 id="STEP3-判断是否处于对称NAT下："><a href="#STEP3-判断是否处于对称NAT下：" class="headerlink" title="STEP3.判断是否处于对称NAT下："></a>STEP3.判断是否处于对称NAT下：</h6><p>B向C的IP2的port2发送一个数据包，C收到数据包后，把它收到包的源IP和port写到UDP包中，然后通过自己的IP2和port2把此包发还给B。</p>
+<p>和step1一样，B肯定能收到这个回应UDP包。此包中的port是我们最关心的数据，下面我们来分析：<br>如果这个port和step1中的port一样，那么可以肯定这个NAT是个CONE NAT，否则是对称NAT。道理很简单：根据对称NAT的规则，当目的地址的IP和port有任何一个改变，那么NAT都会重新分配一个port使用，而在step3中，和step1对应，我们改变了IP和port。因此，如果是对称NAT,那这两个port肯定是不同的。</p>
+<p>如果在你的应用中，到此步的时候PORT是不同的，那么这个它就是处在一个对称NAT下了。如果相同，那么只剩下了restrict cone 和port restrict cone。系统用step4探测是是那一种。</p>
+<h6 id="STEP4-判断是处于Restrict-Cone-NAT还是Port-Restrict-NAT之下："><a href="#STEP4-判断是处于Restrict-Cone-NAT还是Port-Restrict-NAT之下：" class="headerlink" title="STEP4.判断是处于Restrict Cone NAT还是Port Restrict NAT之下："></a>STEP4.判断是处于Restrict Cone NAT还是Port Restrict NAT之下：</h6><p>B向C的IP2的一个端口PD发送一个数据请求包，要求C用IP2和不同于PD的port返回一个数据包给B。</p>
+<p>我们来分析结果：如果B收到了，那也就意味着只要IP相同，即使port不同，NAT也允许UDP包通过。显然这是Restrict Cone NAT。如果没收到，没别的好说，Port Restrict NAT.</p>
+<h6 id="到这里STUN-Server一共通过这4步，判断出客户端处于什么类型的NAT下，"><a href="#到这里STUN-Server一共通过这4步，判断出客户端处于什么类型的NAT下，" class="headerlink" title="到这里STUN Server一共通过这4步，判断出客户端处于什么类型的NAT下，"></a>到这里STUN Server一共通过这4步，判断出客户端处于什么类型的NAT下，</h6><h6 id="然后去做后续的处理：这4步都会返回给客户端它的公网IP、Port和NAT类型，除此之外："><a href="#然后去做后续的处理：这4步都会返回给客户端它的公网IP、Port和NAT类型，除此之外：" class="headerlink" title="然后去做后续的处理：这4步都会返回给客户端它的公网IP、Port和NAT类型，除此之外："></a>然后去做后续的处理：这4步都会返回给客户端它的公网IP、Port和NAT类型，除此之外：</h6><ul>
+<li>如果B处于公网或者Full Cone Nat下，STUN不做其他的了，因为其他客户端可以直接和A进行通信。</li>
+<li>如果B处于Restrict Cone或者Port Restrict NAT下，STUN还会协调TURN进行NAT打洞。</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">B请求STUN服务器，</span><br><span class="line">STUN服务器返回ICE NAT类型给B;</span><br><span class="line">STUN服务器协调打洞TURN服务器;</span><br><span class="line">TURN服务器命令A给B打洞，B给A打洞；</span><br><span class="line">B和A通信</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>如果A处于对称NAT下，那么点对点连接下，NAT是无法进行打洞的。所以为了通信，只能采取最后的手段了，就是转成C&#x2F;S架构了，STUN会协调TURN进行消息转发（中继）。</li>
+</ul>
+<h5 id="2-TURN-Server也主要做了两件事："><a href="#2-TURN-Server也主要做了两件事：" class="headerlink" title="2.TURN Server也主要做了两件事："></a>2.TURN Server也主要做了两件事：</h5><ul>
+<li><h6 id="为NAT打洞："><a href="#为NAT打洞：" class="headerlink" title="为NAT打洞："></a>为NAT打洞：</h6></li>
+</ul>
+<p>如果A和B要互相通信，那么TURN Server，会命令A和B互相发一条信息，这样各自的NAT就留下了对方的洞，下次他们就可以之间进行通信了。</p>
+<ul>
+<li><h6 id="为对称NAT提供消息转发："><a href="#为对称NAT提供消息转发：" class="headerlink" title="为对称NAT提供消息转发："></a>为对称NAT提供消息转发：</h6></li>
+</ul>
+<p>当A或者B其中一方是对称NAT时，那么给这一方发信息，就只能通过TURN Server来转发了。</p>
+<h4 id="最后补充一下，为什么对称NAT无法打洞："><a href="#最后补充一下，为什么对称NAT无法打洞：" class="headerlink" title="最后补充一下，为什么对称NAT无法打洞："></a>最后补充一下，为什么对称NAT无法打洞：</h4><p>假如A、B进行通信，而B处于对称NAT之下，那么A与B通信，STUN拿到A，B的公网地址和端口号都为10000，然后去协调TURN打洞，那么TURN去命令A发信息给B，则A就在NAT打了个B的洞，但是这个B的洞是端口号为10000的洞，但是下次B如果给A发信息，因为B是对称NAT，它给每个新的IP发送信息时，都重新对应一个公网端口，所以给A发送请求可能是公网10001端口，但是A只有B的10000端口被打洞过，所以B的请求就被丢弃了。<br>显然Server是无法协调客户端打洞的，因为协调客户端打得洞仅仅是上次对端为Server发送端口的洞，并不适用于另一个请求。</p>
+<h5 id="最后的最后再补充一点，就是NAT打的洞也是具有时效性的，如果NAT超时了，那么还是需要重新打洞的。"><a href="#最后的最后再补充一点，就是NAT打的洞也是具有时效性的，如果NAT超时了，那么还是需要重新打洞的。" class="headerlink" title="最后的最后再补充一点，就是NAT打的洞也是具有时效性的，如果NAT超时了，那么还是需要重新打洞的。"></a>最后的最后再补充一点，就是NAT打的洞也是具有时效性的，如果NAT超时了，那么还是需要重新打洞的。</h5><p><strong>文章地址：</strong></p>
+<p>作者：涂耀辉<br>链接：<a target="_blank" rel="noopener" href="https://www.jianshu.com/p/84e8c78ca61d">https://www.jianshu.com/p/84e8c78ca61d</a></p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="http://example.com">King</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="http://example.com/2022/03/20/ICE%E5%8D%8F%E8%AE%AE%E4%B8%8BNAT%E7%A9%BF%E8%B6%8A%E7%9A%84%E5%AE%9E%E7%8E%B0%EF%BC%88STUN-TURN%EF%BC%89/">http://example.com/2022/03/20/ICE%E5%8D%8F%E8%AE%AE%E4%B8%8BNAT%E7%A9%BF%E8%B6%8A%E7%9A%84%E5%AE%9E%E7%8E%B0%EF%BC%88STUN-TURN%EF%BC%89/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="http://example.com" target="_blank">君莫笑</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E7%BD%91%E7%BB%9C/">网络</a></div><div class="post-share"><div class="social-share" data-image="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/2022/03/21/zookeeper%E9%80%89%E4%B8%BE%E5%92%8C%E5%90%8C%E6%AD%A5/" title="zookeeper选举"><img class="cover" src="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">zookeeper选举</div></div><div class="info-2"><div class="info-item-1">前言Zookeeper 是一个分布式服务框架，主要是用来解决分布式应用中遇到的一些数据管理问题如：统一命名服务、状态同步服务、集群管理、分布式应用配置项的管理等。 很多分布式中间件都利用zk来提供分布式一致性协调的特性。dubbo官方推荐使用zk作为注册中心，zk也是hadoop和Hbase的重要组件。其他知名的开源中间件中也都出现了zk的身影。 选举注意如果 Zookeeper 是单机部署是不需要选举的，集群模式下才需要选举。   选举四步骤：   个人能力  如何衡量 Zookeeper 节点个人能力？答案是靠数据是否够新，如果节点的数据越新就代表这个节点的个人能力越强，是不是感觉很奇怪，就是这么定的！ 在 Zookeeper 中通常是以事务id（后面简称zxid）来标识数据的新旧程度（版本），节点最新的zxid越大代表这个节点的数据越新，也就代表这个节点能力越强。 zxid 的全称是 ZooKeeper Transaction Id，即 Zookeeper 事务id。  遇强改投  在集群选举开始时，节点首先认为自己是最强的（即数据是最新的），然后在选票上写上自己的名字（包...</div></div></div></a><a class="pagination-related" href="/2022/03/16/P2P%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86%E4%B8%8E%E5%AE%9E%E7%8E%B0/" title="P2P通信原理与实现"><img class="cover" src="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">P2P通信原理与实现</div></div><div class="info-2"><div class="info-item-1">当今互联网到处存在着一些中间件(Middle Boxes),如NAT和防火墙,导致两个(不在同一内网)中的客户端无法直接通信。 目前部署的中间件多都是在C&#x2F;S架构(client&#x2F;server)上设计的,其中相对隐匿的客户机主动向周知的服务端(拥有静态IP地址和DNS名称)发起链接请求. 大多数中间件实现了一种非对称的通讯模型,即内网中的主机可以初始化对外的链接,而外网的主机却不能初始化对内网的链接, 除非经过中间件管理员特殊配置。  前言  在中间件为常见的NAPT的情况下（也是本文主要讨论的）,内网中的客户端没有单独的公网IP地址, 而是通过NAPT转换,和其他同一内网用户共享一个公网IP. 这种内网主机隐藏在中间件后的不可访问性对于一些客户端软件如浏览器来说并不是一个问题,因为其只需要初始化对外的链接,从某方面来看反而还对隐私保护有好处。 然而在P2P应用中, 内网主机（客户端）需要对另外的终端（Peer）直接建立链接,但是发起者和响应者可能在不同的中间件后面, 两者都没有公网IP地址. 而外部对NAT公网IP和端口主动的链接或数据都会因内网未请求被丢弃掉...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/2022/03/23/MQTT%E5%8D%8F%E8%AE%AE%E6%98%AF%E4%B8%AA%E5%95%A5%EF%BC%9F%E8%BF%99%E7%AF%87%E6%96%87%E7%AB%A0%E5%91%8A%E8%AF%89%E4%BD%A0%EF%BC%81/" title="MQTT 协议是个啥？这篇文章告诉你！"><img class="cover" src="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2022-03-23</div><div class="info-item-2">MQTT 协议是个啥？这篇文章告诉你！</div></div><div class="info-2"><div class="info-item-1">什么是 MQTT 协议MQTT 协议的全称是 Message Queuing Telemetry Transport，翻译为消息队列传输探测，它是 ISO 标准下的一种基于发布 - 订阅模式的消息协议，它是基于 TCP&#x2F;IP 协议簇的，它是为了改善网络设备硬件的性能和网络的性能来设计的。MQTT 一般多用于 IoT 即物联网上，广泛应用于工业级别的应用场景，比如汽车、制造、石油、天然气等。 ISO标准是指由『 国际标准化组织 (International Organization for Standardization)， ISO 』制订的标准。 MQTT 基础上面我们解释了 MQTT 协议的基本概念，MQTT 协议总结一点就是一种轻量级的二进制协议，MQTT 协议与 HTTP 相比具有一个明显的优势：数据包开销较小，数据包开销小就意味着更容易进行网络传输。还有一个优势就是 MQTT 在客户端容易实现，而且具有易用性，非常适合当今资源有限的设备。  你可能对这些概念有些讳莫如深，为什么具有 xxx 这种特性呢？这就需要从 MQTT 的设计说起了。  MQTT 协议由 A...</div></div></div></a><a class="pagination-related" href="/2022/03/16/P2P%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86%E4%B8%8E%E5%AE%9E%E7%8E%B0/" title="P2P通信原理与实现"><img class="cover" src="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2022-03-16</div><div class="info-item-2">P2P通信原理与实现</div></div><div class="info-2"><div class="info-item-1">当今互联网到处存在着一些中间件(Middle Boxes),如NAT和防火墙,导致两个(不在同一内网)中的客户端无法直接通信。 目前部署的中间件多都是在C&#x2F;S架构(client&#x2F;server)上设计的,其中相对隐匿的客户机主动向周知的服务端(拥有静态IP地址和DNS名称)发起链接请求. 大多数中间件实现了一种非对称的通讯模型,即内网中的主机可以初始化对外的链接,而外网的主机却不能初始化对内网的链接, 除非经过中间件管理员特殊配置。  前言  在中间件为常见的NAPT的情况下（也是本文主要讨论的）,内网中的客户端没有单独的公网IP地址, 而是通过NAPT转换,和其他同一内网用户共享一个公网IP. 这种内网主机隐藏在中间件后的不可访问性对于一些客户端软件如浏览器来说并不是一个问题,因为其只需要初始化对外的链接,从某方面来看反而还对隐私保护有好处。 然而在P2P应用中, 内网主机（客户端）需要对另外的终端（Peer）直接建立链接,但是发起者和响应者可能在不同的中间件后面, 两者都没有公网IP地址. 而外部对NAT公网IP和端口主动的链接或数据都会因内网未请求被丢弃掉...</div></div></div></a><a class="pagination-related" href="/2022/03/21/zookeeper%E5%AE%89%E8%A3%85/" title="zookeeper安装"><img class="cover" src="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2022-03-21</div><div class="info-item-2">zookeeper安装</div></div><div class="info-2"><div class="info-item-1">安装【ZooKeeper Notes 2】ZooKeeper快速搭建 zookeeper-3.5.5安装报错：找不到或无法加载主类 org.apache.zookeeper.server.quorum.QuorumPeerMain-新版本zookeeper易犯错误 单机部署 安装jdk 地址：https://mirror.bjtu.edu.cn/reverse/apache-archive/zookeeper/zookeeper-3.7.0/ 拉取wget https://mirror.bjtu.edu.cn/reverse/apache-archive/zookeeper/zookeeper-3.7.0/apache-zookeeper-3.7.0-bin.tar.gz --no-check-certificate 解压 tar -zxvf apache-zookeeper-3.7.0-bin.tar.gz 修改名称mv apache-zookeeper-3.7.0-bin zookeeper-3.7.0  移动到你想的位置 mv zookeeper-3.7.0/ /usr/l...</div></div></div></a><a class="pagination-related" href="/2022/03/21/zookeeper%E5%AE%9E%E6%88%98%E4%B9%8B%E6%9C%8D%E5%8A%A1%E6%B3%A8%E5%86%8C%E4%B8%8E%E5%8F%91%E7%8E%B0/" title="zookeeper实战之服务注册与发现"><img class="cover" src="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2022-03-21</div><div class="info-item-2">zookeeper实战之服务注册与发现</div></div><div class="info-2"><div class="info-item-1">在这一篇之前，建议先阅读zookeeper选举和同步.md,阅读清楚后，可以接着轻阅读Zookeeper工作原理（详细）,然后开始本篇章。 参考文章： zookeeper实战之服务注册与发现 Zookeeper-服务注册与发现 </div></div></div></a><a class="pagination-related" href="/2022/03/21/zookeeper%E9%80%89%E4%B8%BE%E5%92%8C%E5%90%8C%E6%AD%A5/" title="zookeeper选举"><img class="cover" src="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2022-03-21</div><div class="info-item-2">zookeeper选举</div></div><div class="info-2"><div class="info-item-1">前言Zookeeper 是一个分布式服务框架，主要是用来解决分布式应用中遇到的一些数据管理问题如：统一命名服务、状态同步服务、集群管理、分布式应用配置项的管理等。 很多分布式中间件都利用zk来提供分布式一致性协调的特性。dubbo官方推荐使用zk作为注册中心，zk也是hadoop和Hbase的重要组件。其他知名的开源中间件中也都出现了zk的身影。 选举注意如果 Zookeeper 是单机部署是不需要选举的，集群模式下才需要选举。   选举四步骤：   个人能力  如何衡量 Zookeeper 节点个人能力？答案是靠数据是否够新，如果节点的数据越新就代表这个节点的个人能力越强，是不是感觉很奇怪，就是这么定的！ 在 Zookeeper 中通常是以事务id（后面简称zxid）来标识数据的新旧程度（版本），节点最新的zxid越大代表这个节点的数据越新，也就代表这个节点能力越强。 zxid 的全称是 ZooKeeper Transaction Id，即 Zookeeper 事务id。  遇强改投  在集群选举开始时，节点首先认为自己是最强的（即数据是最新的），然后在选票上写上自己的名字（包...</div></div></div></a><a class="pagination-related" href="/2021/08/03/%E7%BD%91%E7%BB%9C%E6%8E%A9%E7%A0%81/" title="网络掩码"><img class="cover" src="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2021-08-03</div><div class="info-item-2">网络掩码</div></div><div class="info-2"><div class="info-item-1">ip地址的组成（网络位+主机位）IP地址采用分层结构； IP地址是由网络号（net ID）与主机号（host ID）两部分组成的。 根据不同的取值范围，IP地址可以分为五类；IP地址中的前5位用于标识IP地址的类别： 1234567891011A类地址的第一位为0；  127 =&gt; 0(128)1(64)1(32)1(16) 1(8)1(4)1(2)1(1)网络位7(8-1)位，主机号24位(32-7-1 = 24)B类地址的前两位为10； 191 =&gt; 1(128)0(64)1(32)1(16) 1(8)1(4)1(2)1(1)网络位14(8+8-2)位，主机号16位(32-14-2 = 16)C类地址的前三位为110；223 =&gt; 1(128)1(64)0(32)1(16) 1(8)1(4)1(2)1(1)网络位21(8+8+8-3)位，主机号位(32-21-3 = 8)D类地址的前四位为1110；E类地址的前五位为11110；  实际大多通过子网掩码来区分网络位和主机位，子网掩码跟IP地址一一对应，子网掩码为1的是网络位，为0的是主机位。如：192.168...</div></div></div></a></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fi0.hdslb.com%2Fbfs%2Farticle%2Fdaad713b3241336fafc49e60fe087841a651ea2a.jpg&amp;refer=http%3A%2F%2Fi0.hdslb.com&amp;app=2002&amp;size=f9999,10000&amp;q=a80&amp;n=0&amp;g=0n&amp;fmt=auto?sec=1670482197&amp;t=5044f99a86c9b6f7daec8608424f0a9a" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">King</div><div class="author-info-description">醉卧沙场君莫笑,古来征战几人回</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">53</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">14</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/Butterfly1000/blademaster.github.io"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">欢迎相互学习交流~</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E8%BF%99%E6%98%AFNAT%E5%B8%A6%E6%9D%A5%E7%9A%84%E7%AC%AC%E4%B8%80%E4%B8%AA%E5%89%AF%E4%BD%9C%E7%94%A8%EF%BC%9ANAT%E8%B6%85%E6%97%B6"><span class="toc-number">1.</span> <span class="toc-text">这是NAT带来的第一个副作用：NAT超时:</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E8%80%8C%E7%AC%AC%E4%BA%8C%E4%B8%AA%E5%89%AF%E4%BD%9C%E7%94%A8%E5%B0%B1%E6%98%AF%EF%BC%9A%E6%88%91%E4%BB%AC%E8%BF%99%E8%BE%B9%E6%96%87%E7%AB%A0%E8%A6%81%E6%8F%90%E5%88%B0%E7%9A%84NAT%E5%A2%99%E3%80%82"><span class="toc-number">2.</span> <span class="toc-text">而第二个副作用就是：我们这边文章要提到的NAT墙。</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#STUN%E5%92%8CTURN%E7%9A%84%E5%AE%9E%E7%8E%B0"><span class="toc-number"></span> <span class="toc-text">STUN和TURN的实现</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#1-STUN-Server%E4%B8%BB%E8%A6%81%E5%81%9A%E4%BA%86%E4%B8%A4%E4%BB%B6%E4%BA%8B%EF%BC%9A"><span class="toc-number">1.</span> <span class="toc-text">1.STUN Server主要做了两件事：</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#%E6%9D%A5%E8%AE%B2%E8%AE%B2%E7%AC%AC%E4%BA%8C%E4%BB%B6%E4%BA%8B%EF%BC%8CSTUN%E6%98%AF%E5%A6%82%E4%BD%95%E5%88%A4%E6%96%ADNAT%E7%9A%84%E7%B1%BB%E5%9E%8B%E7%9A%84%EF%BC%9A"><span class="toc-number">1.1.</span> <span class="toc-text">来讲讲第二件事，STUN是如何判断NAT的类型的：</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#STEP1-%E5%88%A4%E6%96%AD%E5%AE%A2%E6%88%B7%E7%AB%AF%E6%98%AF%E5%90%A6%E5%9C%A8NAT%E5%90%8E%EF%BC%9A"><span class="toc-number">1.2.</span> <span class="toc-text">STEP1.判断客户端是否在NAT后：</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#STEP2-%E5%88%A4%E6%96%AD%E6%98%AF%E5%90%A6%E5%A4%84%E4%BA%8EFull-Cone-Nat%E4%B8%8B%EF%BC%9A"><span class="toc-number">1.3.</span> <span class="toc-text">STEP2.判断是否处于Full Cone Nat下：</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#STEP3-%E5%88%A4%E6%96%AD%E6%98%AF%E5%90%A6%E5%A4%84%E4%BA%8E%E5%AF%B9%E7%A7%B0NAT%E4%B8%8B%EF%BC%9A"><span class="toc-number">1.4.</span> <span class="toc-text">STEP3.判断是否处于对称NAT下：</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#STEP4-%E5%88%A4%E6%96%AD%E6%98%AF%E5%A4%84%E4%BA%8ERestrict-Cone-NAT%E8%BF%98%E6%98%AFPort-Restrict-NAT%E4%B9%8B%E4%B8%8B%EF%BC%9A"><span class="toc-number">1.5.</span> <span class="toc-text">STEP4.判断是处于Restrict Cone NAT还是Port Restrict NAT之下：</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E5%88%B0%E8%BF%99%E9%87%8CSTUN-Server%E4%B8%80%E5%85%B1%E9%80%9A%E8%BF%87%E8%BF%994%E6%AD%A5%EF%BC%8C%E5%88%A4%E6%96%AD%E5%87%BA%E5%AE%A2%E6%88%B7%E7%AB%AF%E5%A4%84%E4%BA%8E%E4%BB%80%E4%B9%88%E7%B1%BB%E5%9E%8B%E7%9A%84NAT%E4%B8%8B%EF%BC%8C"><span class="toc-number">1.6.</span> <span class="toc-text">到这里STUN Server一共通过这4步，判断出客户端处于什么类型的NAT下，</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E7%84%B6%E5%90%8E%E5%8E%BB%E5%81%9A%E5%90%8E%E7%BB%AD%E7%9A%84%E5%A4%84%E7%90%86%EF%BC%9A%E8%BF%994%E6%AD%A5%E9%83%BD%E4%BC%9A%E8%BF%94%E5%9B%9E%E7%BB%99%E5%AE%A2%E6%88%B7%E7%AB%AF%E5%AE%83%E7%9A%84%E5%85%AC%E7%BD%91IP%E3%80%81Port%E5%92%8CNAT%E7%B1%BB%E5%9E%8B%EF%BC%8C%E9%99%A4%E6%AD%A4%E4%B9%8B%E5%A4%96%EF%BC%9A"><span class="toc-number">1.7.</span> <span class="toc-text">然后去做后续的处理：这4步都会返回给客户端它的公网IP、Port和NAT类型，除此之外：</span></a></li></ol></li><li class="toc-item toc-level-5"><a class="toc-link" href="#2-TURN-Server%E4%B9%9F%E4%B8%BB%E8%A6%81%E5%81%9A%E4%BA%86%E4%B8%A4%E4%BB%B6%E4%BA%8B%EF%BC%9A"><span class="toc-number">2.</span> <span class="toc-text">2.TURN Server也主要做了两件事：</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#%E4%B8%BANAT%E6%89%93%E6%B4%9E%EF%BC%9A"><span class="toc-number">2.1.</span> <span class="toc-text">为NAT打洞：</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E4%B8%BA%E5%AF%B9%E7%A7%B0NAT%E6%8F%90%E4%BE%9B%E6%B6%88%E6%81%AF%E8%BD%AC%E5%8F%91%EF%BC%9A"><span class="toc-number">2.2.</span> <span class="toc-text">为对称NAT提供消息转发：</span></a></li></ol></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%9C%80%E5%90%8E%E8%A1%A5%E5%85%85%E4%B8%80%E4%B8%8B%EF%BC%8C%E4%B8%BA%E4%BB%80%E4%B9%88%E5%AF%B9%E7%A7%B0NAT%E6%97%A0%E6%B3%95%E6%89%93%E6%B4%9E%EF%BC%9A"><span class="toc-number"></span> <span class="toc-text">最后补充一下，为什么对称NAT无法打洞：</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%9C%80%E5%90%8E%E7%9A%84%E6%9C%80%E5%90%8E%E5%86%8D%E8%A1%A5%E5%85%85%E4%B8%80%E7%82%B9%EF%BC%8C%E5%B0%B1%E6%98%AFNAT%E6%89%93%E7%9A%84%E6%B4%9E%E4%B9%9F%E6%98%AF%E5%85%B7%E6%9C%89%E6%97%B6%E6%95%88%E6%80%A7%E7%9A%84%EF%BC%8C%E5%A6%82%E6%9E%9CNAT%E8%B6%85%E6%97%B6%E4%BA%86%EF%BC%8C%E9%82%A3%E4%B9%88%E8%BF%98%E6%98%AF%E9%9C%80%E8%A6%81%E9%87%8D%E6%96%B0%E6%89%93%E6%B4%9E%E7%9A%84%E3%80%82"><span class="toc-number">1.</span> <span class="toc-text">最后的最后再补充一点，就是NAT打的洞也是具有时效性的，如果NAT超时了，那么还是需要重新打洞的。</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2025/07/08/Cursor%E4%B8%AA%E4%BA%BA%E4%BD%BF%E7%94%A8%E8%AE%B0%E5%BD%95/" title="Cursor个人使用记录"><img src="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Cursor个人使用记录"/></a><div class="content"><a class="title" href="/2025/07/08/Cursor%E4%B8%AA%E4%BA%BA%E4%BD%BF%E7%94%A8%E8%AE%B0%E5%BD%95/" title="Cursor个人使用记录">Cursor个人使用记录</a><time datetime="2025-07-08T09:08:34.000Z" title="发表于 2025-07-08 17:08:34">2025-07-08</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/07/08/hello-world/" title="Hello World"><img src="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Hello World"/></a><div class="content"><a class="title" href="/2025/07/08/hello-world/" title="Hello World">Hello World</a><time datetime="2025-07-08T06:20:40.474Z" title="发表于 2025-07-08 14:20:40">2025-07-08</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/11/08/%E6%B5%8B%E8%AF%95%E6%96%B0%E4%B8%BB%E9%A2%98/" title="测试新主题"><img src="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="测试新主题"/></a><div class="content"><a class="title" href="/2022/11/08/%E6%B5%8B%E8%AF%95%E6%96%B0%E4%B8%BB%E9%A2%98/" title="测试新主题">测试新主题</a><time datetime="2022-11-08T07:51:59.000Z" title="发表于 2022-11-08 15:51:59">2022-11-08</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/06/10/Godoc-%E5%AE%89%E8%A3%85%E4%B8%8E%E4%BD%BF%E7%94%A8/" title="Godoc 安装与使用"><img src="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Godoc 安装与使用"/></a><div class="content"><a class="title" href="/2022/06/10/Godoc-%E5%AE%89%E8%A3%85%E4%B8%8E%E4%BD%BF%E7%94%A8/" title="Godoc 安装与使用">Godoc 安装与使用</a><time datetime="2022-06-10T07:51:14.000Z" title="发表于 2022-06-10 15:51:14">2022-06-10</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/06/10/%E7%AE%80%E5%8D%95%E4%BD%BF%E4%BC%9A%E7%94%A8React/" title="简单使会用React"><img src="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="简单使会用React"/></a><div class="content"><a class="title" href="/2022/06/10/%E7%AE%80%E5%8D%95%E4%BD%BF%E4%BC%9A%E7%94%A8React/" title="简单使会用React">简单使会用React</a><time datetime="2022-06-10T07:44:12.000Z" title="发表于 2022-06-10 15:44:12">2022-06-10</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;2021 - 2025 By King</span></div><div class="footer_custom_text"><span>改变确实很难，但结果值得冒险</span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"></div><div class="aplayer no-destroy" data-id="6988686015" data-server="netease" data-type="playlist" data-fixed="true" data-autoplay="true" data-lrcType="-1"> </div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/metingjs/dist/Meting.min.js"></script><script>(() => {
+  const destroyAplayer = () => {
+    if (window.aplayers) {
+      for (let i = 0; i < window.aplayers.length; i++) {
+        if (!window.aplayers[i].options.fixed) {
+          window.aplayers[i].destroy()
+        }
+      }
+    }
+  }
+
+  const runMetingJS = () => {
+    typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+  }
+
+  btf.addGlobalFn('pjaxSend', destroyAplayer, 'destroyAplayer')
+  btf.addGlobalFn('pjaxComplete', loadMeting, 'runMetingJS')
+})()</script><script src="https://cdn.jsdelivr.net/npm/pjax/pjax.min.js"></script><script>(() => {
+  const pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+  window.pjax = new Pjax({
+    elements: 'a:not([target="_blank"])',
+    selectors: pjaxSelectors,
+    cacheBust: false,
+    analytics: false,
+    scrollRestoration: false
+  })
+
+  const triggerPjaxFn = (val) => {
+    if (!val) return
+    Object.values(val).forEach(fn => fn())
+  }
+
+  document.addEventListener('pjax:send', () => {
+    // removeEventListener
+    btf.removeGlobalFnEvent('pjaxSendOnce')
+    btf.removeGlobalFnEvent('themeChange')
+
+    // reset readmode
+    const $bodyClassList = document.body.classList
+    if ($bodyClassList.contains('read-mode')) $bodyClassList.remove('read-mode')
+
+    triggerPjaxFn(window.globalFn.pjaxSend)
+  })
+
+  document.addEventListener('pjax:complete', () => {
+    btf.removeGlobalFnEvent('pjaxCompleteOnce')
+    document.querySelectorAll('script[data-pjax]').forEach(item => {
+      const newScript = document.createElement('script')
+      const content = item.text || item.textContent || item.innerHTML || ""
+      Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+      newScript.appendChild(document.createTextNode(content))
+      item.parentNode.replaceChild(newScript, item)
+    })
+
+    triggerPjaxFn(window.globalFn.pjaxComplete)
+  })
+
+  document.addEventListener('pjax:error', e => {
+    if (e.request.status === 404) {
+      const usePjax = true
+      false
+        ? (usePjax ? pjax.loadUrl('/404.html') : window.location.href = '/404.html')
+        : window.location.href = e.request.responseURL
+    }
+  })
+})()</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

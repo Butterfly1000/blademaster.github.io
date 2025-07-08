@@ -1,0 +1,295 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>GO 数据类型(入门篇必读) | 君莫笑</title><meta name="author" content="King"><meta name="copyright" content="King"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="为什么是必读？因为这边会给出这个系列的参考&#x2F;出处文章地址  https:&#x2F;&#x2F;mojotv.cn&#x2F;   变量声明语法  123456789101112var a int &#x2F;&#x2F;声明一个int类型的变量var b struct &amp;#123; &#x2F;&#x2F;声明一个结构体    Name string&amp;#125;var a &#x3D; 8 &#x2F;&#x2F;声明变量的同时赋值,编译器自动推导其数据类型var a int &#x3D;">
+<meta property="og:type" content="article">
+<meta property="og:title" content="GO 数据类型(入门篇必读)">
+<meta property="og:url" content="http://example.com/2021/08/16/GO-%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B/index.html">
+<meta property="og:site_name" content="君莫笑">
+<meta property="og:description" content="为什么是必读？因为这边会给出这个系列的参考&#x2F;出处文章地址  https:&#x2F;&#x2F;mojotv.cn&#x2F;   变量声明语法  123456789101112var a int &#x2F;&#x2F;声明一个int类型的变量var b struct &amp;#123; &#x2F;&#x2F;声明一个结构体    Name string&amp;#125;var a &#x3D; 8 &#x2F;&#x2F;声明变量的同时赋值,编译器自动推导其数据类型var a int &#x3D;">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg">
+<meta property="article:published_time" content="2021-08-16T02:12:23.000Z">
+<meta property="article:modified_time" content="2025-07-08T06:20:40.458Z">
+<meta property="article:author" content="King">
+<meta property="article:tag" content="GO入门">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "GO 数据类型(入门篇必读)",
+  "url": "http://example.com/2021/08/16/GO-%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B/",
+  "image": "https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg",
+  "datePublished": "2021-08-16T02:12:23.000Z",
+  "dateModified": "2025-07-08T06:20:40.458Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "King",
+      "url": "http://example.com"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/logo.jpeg"><link rel="canonical" href="http://example.com/2021/08/16/GO-%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!true && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'GO 数据类型(入门篇必读)',
+  isHighlightShrink: false,
+  isToc: false,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 6.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fi0.hdslb.com%2Fbfs%2Farticle%2Fdaad713b3241336fafc49e60fe087841a651ea2a.jpg&amp;refer=http%3A%2F%2Fi0.hdslb.com&amp;app=2002&amp;size=f9999,10000&amp;q=a80&amp;n=0&amp;g=0n&amp;fmt=auto?sec=1670482197&amp;t=5044f99a86c9b6f7daec8608424f0a9a" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">53</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">14</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-list"></i><span> 清单</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">君莫笑</span></a><a class="nav-page-title" href="/"><span class="site-name">GO 数据类型(入门篇必读)</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-list"></i><span> 清单</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">GO 数据类型(入门篇必读)</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2021-08-16T02:12:23.000Z" title="发表于 2021-08-16 10:12:23">2021-08-16</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-07-08T06:20:40.458Z" title="更新于 2025-07-08 14:20:40">2025-07-08</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><blockquote>
+<p>为什么是必读？因为这边会给出这个系列的参考&#x2F;出处文章地址</p>
+</blockquote>
+<p><a target="_blank" rel="noopener" href="https://mojotv.cn/">https://mojotv.cn/</a></p>
+<blockquote>
+<p> 变量声明语法</p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">var a int //声明一个int类型的变量</span><br><span class="line"></span><br><span class="line">var b struct &#123; //声明一个结构体</span><br><span class="line">    Name string</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">var a = 8 //声明变量的同时赋值,编译器自动推导其数据类型</span><br><span class="line"></span><br><span class="line">var a int = 8 //声明变量的同时赋值</span><br><span class="line"></span><br><span class="line">//声明变量的同时赋值更习惯用&quot;:=&quot;，但注意全局变量不可以用&quot;:=&quot;</span><br><span class="line">a := 8</span><br></pre></td></tr></table></figure>
+
+<p><strong>go可使用var关键字声明全局变量,但是:&#x3D;这种方式是不能用在全局变量中的.:&#x3D;只能用在函数体内部.</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">var (</span><br><span class="line">    a int</span><br><span class="line">    b bool</span><br><span class="line">    xx,yy,dd string=&quot;xx&quot;,&quot;yy&quot;,&quot;dd&quot;</span><br><span class="line">    //这里省略变量类型也是可以的.</span><br><span class="line">    zz,aa=&quot;zz&quot;,&quot;aa&quot;        //注意用&quot;=&quot;，不能用&quot;:=&quot;</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<p><strong>go函数体内的变量是如果被声明了,那么必须使用,不然会报错。注:全局变量声明未使用不会报错</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">//已声明,但如果不想使用可以加上_=varName,表示为已抛弃的变量.</span><br><span class="line">var a=1</span><br><span class="line">//标识为已抛弃的变量.</span><br><span class="line">_=a  </span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>变量初始化</p>
+</blockquote>
+<p><strong>Go 语言在声明变量时会默认给变量赋个当前类型的<code>空值</code>&#x2F;<code>零值</code></strong></p>
+<p>在方法中声明一个临时变量并赋初值</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">//推荐,会更新值的格式自动声明变量类型</span><br><span class="line">tmpStr :=&quot;&quot;</span><br></pre></td></tr></table></figure>
+
+<p>当一个变量或者新值被创建时, 如果没有为其明确指定初始值,go语言会自动初始化其值为此类型对应的零值。</p>
+<table>
+<thead>
+<tr>
+<th align="center">类型</th>
+<th align="center"><strong>零值</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">数值类型</td>
+<td align="center">0</td>
+</tr>
+<tr>
+<td align="center">布尔类型</td>
+<td align="center">false</td>
+</tr>
+<tr>
+<td align="center">字符串</td>
+<td align="center">“”（空字符串）</td>
+</tr>
+<tr>
+<td align="center">slice</td>
+<td align="center">nil</td>
+</tr>
+<tr>
+<td align="center">map</td>
+<td align="center">nil</td>
+</tr>
+<tr>
+<td align="center">指针</td>
+<td align="center">nil</td>
+</tr>
+<tr>
+<td align="center">函数</td>
+<td align="center">nil</td>
+</tr>
+<tr>
+<td align="center">接口</td>
+<td align="center">nil</td>
+</tr>
+<tr>
+<td align="center">信道</td>
+<td align="center">nil</td>
+</tr>
+</tbody></table>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="http://example.com">King</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="http://example.com/2021/08/16/GO-%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B/">http://example.com/2021/08/16/GO-%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="http://example.com" target="_blank">君莫笑</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/GO%E5%85%A5%E9%97%A8/">GO入门</a></div><div class="post-share"><div class="social-share" data-image="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/2021/08/16/GO-%E5%8C%85package%E5%92%8Cimport/" title="GO 包package和import"><img class="cover" src="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">GO 包package和import</div></div><div class="info-2"><div class="info-item-1"> 什么是package  package用于对我们的程序进行*分类*,以便易于维护. 每个go文件都属于某个包. 每个Go应用程序必须具有main包。包名称应以小写字母书写. 如果更改并重新编译package,则必须重新编译使用此package的所有代码程序！  Import 别名导入   import mongo &quot;mywebapp/libs/mongodb/db&quot;  Import 省略package名导入  这里的点.符号表示,对包 lib 的调用直接省略包名,您我以后就是一家人,不分彼此,您的东西就像我就的一样,随便用. 12345package mainimport . &quot;github.com/libragen/felix/lib&quot;func main() &#123;	SayHello() //如果没有.忽略包名,那么需要lib.SayHello()。不过这样可能要注意函数名或变量名是否会冲突，个人不推荐&#125;   Import  执行初始化工作导入  import _ &quot;github.com/libragen/fe...</div></div></div></a><a class="pagination-related" href="/2021/08/03/Hexo%E5%8D%9A%E5%AE%A2%E4%B8%AD%E6%8F%92%E5%85%A5%E9%9F%B3%E4%B9%90/" title="Hexo博客中插入音乐"><img class="cover" src="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">Hexo博客中插入音乐</div></div><div class="info-2"><div class="info-item-1">成品具体成功已体现在网络掩码文章底部。 操作一款html5音乐播放器：Aplayer。把Aplayer加入hexo需要用到hexo-tag-aplayer插件。 切换到hexo目录，运行： 1npm install --save hexo-tag-aplayer  安装完成后，在需要添加音乐的地方加上： 1&#123;% aplayer &quot;歌曲名称&quot; &quot;作者&quot; &quot;音乐_url&quot; &quot;封面图片_url&quot; &quot;autoplay&quot; %&#125;  文章链接 网易云外链的处理网易云提供的外链连接无法成功播放，所以找到一篇解决的文章。 例如：杨钰莹的心雨，网址是：http://music.163.com/#/song?id=317151 很明显，ID是317151 那么，这首歌的真实地址就是：http://music.163.com/song/media/outer/url?id=317151.mp3 文章链接 问题mac端(win端没有测试过)控制不了音量大小，只能空过电脑或耳机条件。 1&...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/2022/03/22/GO-Channel-%E4%BF%A1%E9%81%93/" title="Channel 信道"><img class="cover" src="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2022-03-22</div><div class="info-item-2">Channel 信道</div></div><div class="info-2"><div class="info-item-1">说到channel，就一定要说一说线程了。任何实际项目，无论大小，并发是必然存在的。并发的存在，就涉及到线程通信。在当下的开发语言中，线程通讯主要有两种，共享内存与消息传递。共享内存一定都很熟悉，通过共同操作同一对象，实现线程间通讯。消息传递即通过类似聊天的方式。golang对并发的处理采用了协程的技术。golang的goroutine就是协程的实现。协程的概念很早就有，简单的理解为轻量级线程，goroutine就是为了解决并发任务间的通信而设计的。golang解决通信的理念是：不要通过共享内存来通信,而应该通过通信来共享内存。golang解决方案是消息传递机制，消息的传递就是通过channel来实现的。 Channal是什么？Channal就是用来通信的，就像Unix下的管道一样，在Go中是这样使用Channel的。 下面的程序演示了一个goroutine和主程序通信的例程。这个程序足够简单了。 12345678910package mainimport &quot;fmt&quot;func main() &#123;    //创建一个string类型的channel   ...</div></div></div></a><a class="pagination-related" href="/2021/08/16/GO-%E5%8C%85package%E5%92%8Cimport/" title="GO 包package和import"><img class="cover" src="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2021-08-16</div><div class="info-item-2">GO 包package和import</div></div><div class="info-2"><div class="info-item-1"> 什么是package  package用于对我们的程序进行*分类*,以便易于维护. 每个go文件都属于某个包. 每个Go应用程序必须具有main包。包名称应以小写字母书写. 如果更改并重新编译package,则必须重新编译使用此package的所有代码程序！  Import 别名导入   import mongo &quot;mywebapp/libs/mongodb/db&quot;  Import 省略package名导入  这里的点.符号表示,对包 lib 的调用直接省略包名,您我以后就是一家人,不分彼此,您的东西就像我就的一样,随便用. 12345package mainimport . &quot;github.com/libragen/felix/lib&quot;func main() &#123;	SayHello() //如果没有.忽略包名,那么需要lib.SayHello()。不过这样可能要注意函数名或变量名是否会冲突，个人不推荐&#125;   Import  执行初始化工作导入  import _ &quot;github.com/libragen/fe...</div></div></div></a><a class="pagination-related" href="/2021/08/16/GO-%E6%8E%A7%E5%88%B6%E7%BB%93%E6%9E%84if-else/" title="GO 控制结构if-else"><img class="cover" src="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2021-08-16</div><div class="info-item-2">GO 控制结构if-else</div></div><div class="info-2"><div class="info-item-1"> 简单例子:  1234567if condition1 &#123;	// do something	&#125; else if condition2 &#123;	// do something else	&#125; else &#123;	// catch-all or default&#125;  注意: 1.即使当代码块之间只有一条语句时,大括号也不可被省略。 2.关键字 if 和 else 之后的左大括号 &#123; 必须和关键字在同一行 1234if x&#123;&#125;else &#123;	// 无效的&#125; &amp;nbsp;  使用方式  当 if 结构内有 break,continue,goto 或者 return 语句时,Go 代码的常见写法是省略 else 部分.无论满足哪个条件都会返回 x 或者 y 时,一般使用以下写法： 1234if condition &#123;	return x&#125;return y  注意事项 不要同时在 if-else 结构的两个分支里都使用 return 语句,这将导致编译报错 functio...</div></div></div></a><a class="pagination-related" href="/2021/08/16/Go-%E6%8E%A7%E5%88%B6%E7%BB%93%E6%9E%84for%E5%BE%AA%E7%8E%AFloop/" title="Go 控制结构for循环loop"><img class="cover" src="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2021-08-16</div><div class="info-item-2">Go 控制结构for循环loop</div></div><div class="info-2"><div class="info-item-1">for循环是编程语言中一种循环语句，for 是 Go 语言唯一的循环语句.Go 语言中并没有其他语言比如 C 语言中的 while 和 do while 循环.  for循环  12for initialisation; condition; post &#123;  &#125;  这是典型的 for 循环三个表达式,第一个为初始化表达式或赋值语句;第二个为循环条件判定表达式;第三个为循环变量修正表达式,即此处的 post。 示例: 1234567package main  import &quot;fmt&quot;  func main() &#123;     for a := 0; a &lt; 12; a++ &#123;        fmt.Print(a,&quot;\n&quot;)     &#125;  &#125;   &amp;nbsp;  for嵌套  Go 语言允许用户在循环内使用循环.接下来我们将为大家介绍嵌套循环的使用. 以下实例使用循环嵌套来输出 2 到 100 间的素数： 12345678910111213141516171819packa...</div></div></div></a><a class="pagination-related" href="/2021/10/27/go%E7%9A%84%E4%B8%80%E4%BA%9B%E8%AE%A4%E7%9F%A5%E4%BD%BF%E7%94%A8/" title="go的一些认知使用"><img class="cover" src="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2021-10-27</div><div class="info-item-2">go的一些认知使用</div></div><div class="info-2"><div class="info-item-1">本篇观点不一定正确，目前仅供个人使用 数组和切片区别  数组是固定的，但切片有扩展性append  切片和map  其实map可以当做一个类型，可以存储字符串  map嵌套  12345678a := map[string]map[string]string&#123;&#125;b,ok := a[&quot;name&quot;]if !ok &#123;    b := make(map[string]string)    a[&quot;name&quot;] = b    b[&quot;xiaoming&quot;] = &quot;go&quot;    b[&quot;xiaodong&quot;] = &quot;why&quot;&#125;   struct 继承和重组  结构体，对象。可以通过指针关联方法 1https://blog.csdn.net/z226688/article/details/108963110  </div></div></div></a></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fi0.hdslb.com%2Fbfs%2Farticle%2Fdaad713b3241336fafc49e60fe087841a651ea2a.jpg&amp;refer=http%3A%2F%2Fi0.hdslb.com&amp;app=2002&amp;size=f9999,10000&amp;q=a80&amp;n=0&amp;g=0n&amp;fmt=auto?sec=1670482197&amp;t=5044f99a86c9b6f7daec8608424f0a9a" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">King</div><div class="author-info-description">醉卧沙场君莫笑,古来征战几人回</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">53</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">14</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/Butterfly1000/blademaster.github.io"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">欢迎相互学习交流~</div></div><div class="sticky_layout"><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2025/07/08/Cursor%E4%B8%AA%E4%BA%BA%E4%BD%BF%E7%94%A8%E8%AE%B0%E5%BD%95/" title="Cursor个人使用记录"><img src="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Cursor个人使用记录"/></a><div class="content"><a class="title" href="/2025/07/08/Cursor%E4%B8%AA%E4%BA%BA%E4%BD%BF%E7%94%A8%E8%AE%B0%E5%BD%95/" title="Cursor个人使用记录">Cursor个人使用记录</a><time datetime="2025-07-08T09:08:34.000Z" title="发表于 2025-07-08 17:08:34">2025-07-08</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/07/08/hello-world/" title="Hello World"><img src="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Hello World"/></a><div class="content"><a class="title" href="/2025/07/08/hello-world/" title="Hello World">Hello World</a><time datetime="2025-07-08T06:20:40.474Z" title="发表于 2025-07-08 14:20:40">2025-07-08</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/11/08/%E6%B5%8B%E8%AF%95%E6%96%B0%E4%B8%BB%E9%A2%98/" title="测试新主题"><img src="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="测试新主题"/></a><div class="content"><a class="title" href="/2022/11/08/%E6%B5%8B%E8%AF%95%E6%96%B0%E4%B8%BB%E9%A2%98/" title="测试新主题">测试新主题</a><time datetime="2022-11-08T07:51:59.000Z" title="发表于 2022-11-08 15:51:59">2022-11-08</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/06/10/Godoc-%E5%AE%89%E8%A3%85%E4%B8%8E%E4%BD%BF%E7%94%A8/" title="Godoc 安装与使用"><img src="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Godoc 安装与使用"/></a><div class="content"><a class="title" href="/2022/06/10/Godoc-%E5%AE%89%E8%A3%85%E4%B8%8E%E4%BD%BF%E7%94%A8/" title="Godoc 安装与使用">Godoc 安装与使用</a><time datetime="2022-06-10T07:51:14.000Z" title="发表于 2022-06-10 15:51:14">2022-06-10</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/06/10/%E7%AE%80%E5%8D%95%E4%BD%BF%E4%BC%9A%E7%94%A8React/" title="简单使会用React"><img src="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="简单使会用React"/></a><div class="content"><a class="title" href="/2022/06/10/%E7%AE%80%E5%8D%95%E4%BD%BF%E4%BC%9A%E7%94%A8React/" title="简单使会用React">简单使会用React</a><time datetime="2022-06-10T07:44:12.000Z" title="发表于 2022-06-10 15:44:12">2022-06-10</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;2021 - 2025 By King</span></div><div class="footer_custom_text"><span>改变确实很难，但结果值得冒险</span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"></div><div class="aplayer no-destroy" data-id="6988686015" data-server="netease" data-type="playlist" data-fixed="true" data-autoplay="true" data-lrcType="-1"> </div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/metingjs/dist/Meting.min.js"></script><script>(() => {
+  const destroyAplayer = () => {
+    if (window.aplayers) {
+      for (let i = 0; i < window.aplayers.length; i++) {
+        if (!window.aplayers[i].options.fixed) {
+          window.aplayers[i].destroy()
+        }
+      }
+    }
+  }
+
+  const runMetingJS = () => {
+    typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+  }
+
+  btf.addGlobalFn('pjaxSend', destroyAplayer, 'destroyAplayer')
+  btf.addGlobalFn('pjaxComplete', loadMeting, 'runMetingJS')
+})()</script><script src="https://cdn.jsdelivr.net/npm/pjax/pjax.min.js"></script><script>(() => {
+  const pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+  window.pjax = new Pjax({
+    elements: 'a:not([target="_blank"])',
+    selectors: pjaxSelectors,
+    cacheBust: false,
+    analytics: false,
+    scrollRestoration: false
+  })
+
+  const triggerPjaxFn = (val) => {
+    if (!val) return
+    Object.values(val).forEach(fn => fn())
+  }
+
+  document.addEventListener('pjax:send', () => {
+    // removeEventListener
+    btf.removeGlobalFnEvent('pjaxSendOnce')
+    btf.removeGlobalFnEvent('themeChange')
+
+    // reset readmode
+    const $bodyClassList = document.body.classList
+    if ($bodyClassList.contains('read-mode')) $bodyClassList.remove('read-mode')
+
+    triggerPjaxFn(window.globalFn.pjaxSend)
+  })
+
+  document.addEventListener('pjax:complete', () => {
+    btf.removeGlobalFnEvent('pjaxCompleteOnce')
+    document.querySelectorAll('script[data-pjax]').forEach(item => {
+      const newScript = document.createElement('script')
+      const content = item.text || item.textContent || item.innerHTML || ""
+      Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+      newScript.appendChild(document.createTextNode(content))
+      item.parentNode.replaceChild(newScript, item)
+    })
+
+    triggerPjaxFn(window.globalFn.pjaxComplete)
+  })
+
+  document.addEventListener('pjax:error', e => {
+    if (e.request.status === 404) {
+      const usePjax = true
+      false
+        ? (usePjax ? pjax.loadUrl('/404.html') : window.location.href = '/404.html')
+        : window.location.href = e.request.responseURL
+    }
+  })
+})()</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

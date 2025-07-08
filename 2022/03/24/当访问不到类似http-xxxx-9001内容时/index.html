@@ -1,0 +1,238 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>当访问不到类似http:xxxx:9001内容时 | 君莫笑</title><meta name="author" content="King"><meta name="copyright" content="King"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="查看是否使用阿里云，确认安全组是否开启端口 查看防火墙端口是否开启https:&#x2F;&#x2F;www.cnblogs.com&#x2F;zxg-blog&#x2F;p&#x2F;9835263.html 查看netstat -lnpt | grep “端口” 查看端口是否允许 查看是否是0.0.0.0，而非127.0.0.1 通过telnet 0.0.0.0 9001 通过curl 0.0.0.0 9001 通过ping 0.0.0.0">
+<meta property="og:type" content="article">
+<meta property="og:title" content="当访问不到类似http:xxxx:9001内容时">
+<meta property="og:url" content="http://example.com/2022/03/24/%E5%BD%93%E8%AE%BF%E9%97%AE%E4%B8%8D%E5%88%B0%E7%B1%BB%E4%BC%BChttp-xxxx-9001%E5%86%85%E5%AE%B9%E6%97%B6/index.html">
+<meta property="og:site_name" content="君莫笑">
+<meta property="og:description" content="查看是否使用阿里云，确认安全组是否开启端口 查看防火墙端口是否开启https:&#x2F;&#x2F;www.cnblogs.com&#x2F;zxg-blog&#x2F;p&#x2F;9835263.html 查看netstat -lnpt | grep “端口” 查看端口是否允许 查看是否是0.0.0.0，而非127.0.0.1 通过telnet 0.0.0.0 9001 通过curl 0.0.0.0 9001 通过ping 0.0.0.0">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg">
+<meta property="article:published_time" content="2022-03-24T07:51:32.000Z">
+<meta property="article:modified_time" content="2025-07-08T06:20:40.480Z">
+<meta property="article:author" content="King">
+<meta property="article:tag" content="知识点">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "当访问不到类似http:xxxx:9001内容时",
+  "url": "http://example.com/2022/03/24/%E5%BD%93%E8%AE%BF%E9%97%AE%E4%B8%8D%E5%88%B0%E7%B1%BB%E4%BC%BChttp-xxxx-9001%E5%86%85%E5%AE%B9%E6%97%B6/",
+  "image": "https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg",
+  "datePublished": "2022-03-24T07:51:32.000Z",
+  "dateModified": "2025-07-08T06:20:40.480Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "King",
+      "url": "http://example.com"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/logo.jpeg"><link rel="canonical" href="http://example.com/2022/03/24/%E5%BD%93%E8%AE%BF%E9%97%AE%E4%B8%8D%E5%88%B0%E7%B1%BB%E4%BC%BChttp-xxxx-9001%E5%86%85%E5%AE%B9%E6%97%B6/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!true && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '当访问不到类似http:xxxx:9001内容时',
+  isHighlightShrink: false,
+  isToc: false,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 6.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fi0.hdslb.com%2Fbfs%2Farticle%2Fdaad713b3241336fafc49e60fe087841a651ea2a.jpg&amp;refer=http%3A%2F%2Fi0.hdslb.com&amp;app=2002&amp;size=f9999,10000&amp;q=a80&amp;n=0&amp;g=0n&amp;fmt=auto?sec=1670482197&amp;t=5044f99a86c9b6f7daec8608424f0a9a" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">53</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">14</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-list"></i><span> 清单</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">君莫笑</span></a><a class="nav-page-title" href="/"><span class="site-name">当访问不到类似http:xxxx:9001内容时</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-list"></i><span> 清单</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">当访问不到类似http:xxxx:9001内容时</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2022-03-24T07:51:32.000Z" title="发表于 2022-03-24 15:51:32">2022-03-24</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-07-08T06:20:40.480Z" title="更新于 2025-07-08 14:20:40">2025-07-08</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><ol>
+<li>查看是否使用阿里云，确认安全组是否开启端口</li>
+<li>查看防火墙端口是否开启<br><code>https://www.cnblogs.com/zxg-blog/p/9835263.html</code></li>
+<li>查看netstat -lnpt | grep “端口” 查看端口是否允许</li>
+<li>查看是否是0.0.0.0，而非127.0.0.1</li>
+<li>通过telnet 0.0.0.0 9001</li>
+<li>通过curl 0.0.0.0 9001</li>
+<li>通过ping 0.0.0.0 9001</li>
+<li>端口是否被占用</li>
+</ol>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="http://example.com">King</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="http://example.com/2022/03/24/%E5%BD%93%E8%AE%BF%E9%97%AE%E4%B8%8D%E5%88%B0%E7%B1%BB%E4%BC%BChttp-xxxx-9001%E5%86%85%E5%AE%B9%E6%97%B6/">http://example.com/2022/03/24/%E5%BD%93%E8%AE%BF%E9%97%AE%E4%B8%8D%E5%88%B0%E7%B1%BB%E4%BC%BChttp-xxxx-9001%E5%86%85%E5%AE%B9%E6%97%B6/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="http://example.com" target="_blank">君莫笑</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E7%9F%A5%E8%AF%86%E7%82%B9/">知识点</a></div><div class="post-share"><div class="social-share" data-image="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/2022/03/24/Vernemq%E9%9B%86%E7%BE%A4%E6%90%AD%E5%BB%BA%E3%80%81%E7%9B%91%E6%8E%A7%E6%98%AF%E7%9C%9F%E7%9A%84%E5%A5%BD%E7%94%A8/" title="Vernemq集群搭建、监控是真的好用"><img class="cover" src="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">Vernemq集群搭建、监控是真的好用</div></div><div class="info-2"><div class="info-item-1">安装下载 1wget https://github.com/vernemq/vernemq/releases/download/1.12.3/vernemq-1.12.3.centos7.x86_64.rpm  yum安装 1$ yum -y install ./vernemq-1.12.3.centos7.x86_64.rpm  安装完成后会自动生成配置文件**&#x2F;etc&#x2F;vernemq&#x2F;vernemq.conf**，修改配置文件，仅修改而不是全部替换 12345678910111213141516# 是否开启匿名访问，开启匿名访问后将不验证用户名及密码allow_anonymous = off# 若配置集群需要开发内部通讯allow_register_during_netsplit = onallow_publish_during_netsplit = onallow_subscribe_during_netsplit = onallow_unsubscribe_during_netsplit = on# 配置MQTT可连接地址以及端口0.0.0....</div></div></div></a><a class="pagination-related" href="/2022/03/24/MongoDB%E5%B8%B8%E8%A7%81%E6%93%8D%E4%BD%9C/" title="MongoDB常见操作"><img class="cover" src="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">MongoDB常见操作</div></div><div class="info-2"><div class="info-item-1">评价查询操作符$mod - 取模计算示例 1234&gt;db.c1.find()结果：&#123;&quot;_id&quot;:ObjectId(&quot;4fb4af85afa87dc1bed94330&quot;),&quot;age&quot;:7,&quot;length_1&quot;:30&#125;&#123;&quot;_id&quot;:ObjectId(&quot;4fb4af89afa87dc1bed94331&quot;),&quot;age&quot;:8,&quot;length_1&quot;:30&#125;&#123;&quot;_id&quot;:ObjectId(&quot;4fb4af8cafa87dc1bed94332&quot;),&quot;age&quot;:6,&quot;length_1&quot;:30&#125;  查询age取模6等于1的数据，如下面的代码所示： 1234&gt;db.c1.find(&#123;age:&#123;$mod:[6,1]&#125;&#125;)结果：&#123;&quot;_id&q...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/2025/07/08/Cursor%E4%B8%AA%E4%BA%BA%E4%BD%BF%E7%94%A8%E8%AE%B0%E5%BD%95/" title="Cursor个人使用记录"><img class="cover" src="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-07-08</div><div class="info-item-2">Cursor个人使用记录</div></div><div class="info-2"><div class="info-item-1">自定义mode  在Agent、Ask、Manual，现在还有个Background，在这些之外，还可以自定义mode。   我们可以设置自定义mode的一些功能：  自定义命名，说明这个mode是作用于什么，例如”代码审查员” 选择可以使用的Tools，Search、Edit、Run(终端)、MCP(选择MCP工具) 还可以添加自定义介绍    **注: 使用前必须先在 设置 - Chat - Custom Modes 开启 ** AI模型初始的AI模型可能很少，需要再 设置 - Models 开启。 MCP工具这个其他文档有详细介绍， 设置 - Tools &amp; Integrations  MCP Tools栏 - + New MCP Server MCP就是给AI权限，让AI可以去进行一些操作，举个例子fetch赋予AI自主抓取网页分析的能力，Git让AI可以查看Git分支内容。这样就可以让AI自行去分析，而不是我们获取信息再丢给AI处理。 Rules规则由于AI对于项目的一些习惯和规则是不熟悉的，需要进行设置。否则AI很可能会出现发散式思考，偏离需求。另外，AI也可...</div></div></div></a><a class="pagination-related" href="/2022/03/24/MongoDB%E5%B8%B8%E8%A7%81%E6%93%8D%E4%BD%9C/" title="MongoDB常见操作"><img class="cover" src="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2022-03-24</div><div class="info-item-2">MongoDB常见操作</div></div><div class="info-2"><div class="info-item-1">评价查询操作符$mod - 取模计算示例 1234&gt;db.c1.find()结果：&#123;&quot;_id&quot;:ObjectId(&quot;4fb4af85afa87dc1bed94330&quot;),&quot;age&quot;:7,&quot;length_1&quot;:30&#125;&#123;&quot;_id&quot;:ObjectId(&quot;4fb4af89afa87dc1bed94331&quot;),&quot;age&quot;:8,&quot;length_1&quot;:30&#125;&#123;&quot;_id&quot;:ObjectId(&quot;4fb4af8cafa87dc1bed94332&quot;),&quot;age&quot;:6,&quot;length_1&quot;:30&#125;  查询age取模6等于1的数据，如下面的代码所示： 1234&gt;db.c1.find(&#123;age:&#123;$mod:[6,1]&#125;&#125;)结果：&#123;&quot;_id&q...</div></div></div></a><a class="pagination-related" href="/2021/03/08/%E4%BD%8D%E8%BF%90%E7%AE%97/" title="位运算"><img class="cover" src="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2021-03-08</div><div class="info-item-2">位运算</div></div><div class="info-2"><div class="info-item-1">二进制二进制（binary）在数学和数字电路中指以2为基数的记数系统，以2为基数代表系统是二进位制的。 简单的理解就是满二进一位，每一位只可能是0或1。 以1,2,3,4为例，1就是1; 而2在1的基础上加1，位满2进一位，所以前面新增一位是1，之前的栏位因为进位所以为0，二进制就是1 0;那么,3的情况就是在2的末位加上1，所为为 1 1; 最后,4在3的末位加1,末位满2需要往倒数第二位进位加1，末位则为0，倒数第二位因为末位进位也满2进位，所为为0，新增一位为1，就是 1 0 0 。 位运算   运算符 作用    \ &amp;#124; 位或   &amp; 位与   ^ 位异或   &lt;&lt; 位左移   &amp;#62;&amp;#62; 位右移   ~ 位取反   上面就是常见的运算符。下面讲解具体的运算:  | 位或 (1遇0保存1) 举例：10 | 15 10 转二进制 1010 15 转二进制 1111 1010 1111  1111 结果:15 &amp; 位与(1遇0保存0) 举例：10 &amp;15 10 转二进制 1010 15 转二进制 ...</div></div></div></a><a class="pagination-related" href="/2021/09/01/%E5%85%B3%E4%BA%8Egit%E6%92%A4%E5%9B%9E%E5%86%85%E5%AE%B9%E7%9A%84%E6%80%9D%E8%80%83/" title="关于git撤回内容的思考"><img class="cover" src="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2021-09-01</div><div class="info-item-2">关于git撤回内容的思考</div></div><div class="info-2"><div class="info-item-1">本地如果是在本地就直接用Reset Git Reset 三种模式 </div></div></div></a><a class="pagination-related" href="/2021/10/09/%E6%89%A9%E5%B1%95%E7%AE%A1%E7%90%86%E5%B7%A5%E5%85%B7composer/" title="扩展管理工具composer"><img class="cover" src="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2021-10-09</div><div class="info-item-2">扩展管理工具composer</div></div><div class="info-2"><div class="info-item-1">前言作为最热门的php的扩展工具，composer在各个php框架基本都会用到，本文介绍一下实用常规操作。 composer的作用Composer是 PHP 用来管理依赖（dependency）关系的工具。你可以在自己的项目中声明所依赖的外部工具库（libraries），Composer 会帮你安装这些依赖的库文件。 初始化扩展包先创建一个空目录，再在空目录里执行 Composer 自带的 init 命令，自动生成 Composer 的配置文件(composer.json)。 123$ mkdir composer_test$ cd composer_test$ composer init  请注意： Minimum Stability(官方说明) 要输入 dev，表明我们的扩展包最小稳定版的开发版。否则 Composer 的默认 Minimum Stability 是 stable，扩展包需要打上版本号才能被 Composer 认为是稳定版(stable)，前期开发调试时简单点处理，设置为 dev，这样引入开发中的 Composer 扩展包时不需要去管什么版本号，等开发调试过了...</div></div></div></a><a class="pagination-related" href="/2022/06/10/%E7%AE%80%E5%8D%95%E4%BD%BF%E4%BC%9A%E7%94%A8React/" title="简单使会用React"><img class="cover" src="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2022-06-10</div><div class="info-item-2">简单使会用React</div></div><div class="info-2"><div class="info-item-1">环境Linux Centos7 一、安装node.js(npm)12345678910111213141516171819202122232425262728293031323334### yum安装npm(完成这个即可)curl --silent --location https://rpm.nodesource.com/setup_10.x | bash -yum install -y nodejsnpm install -g cnpm --registry=https://registry.npm.taobao.orgnpm config set registry https://registry.npm.taobao.org### 常用操作npm initnpm installnpm run buildnpm -v### node.js升级//安装npm升级工具npm install -g n//安装最近的稳定版本n stable---------------------------  installing : node-v16.15.0       mkdir : /u...</div></div></div></a></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fi0.hdslb.com%2Fbfs%2Farticle%2Fdaad713b3241336fafc49e60fe087841a651ea2a.jpg&amp;refer=http%3A%2F%2Fi0.hdslb.com&amp;app=2002&amp;size=f9999,10000&amp;q=a80&amp;n=0&amp;g=0n&amp;fmt=auto?sec=1670482197&amp;t=5044f99a86c9b6f7daec8608424f0a9a" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">King</div><div class="author-info-description">醉卧沙场君莫笑,古来征战几人回</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">53</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">14</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/Butterfly1000/blademaster.github.io"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">欢迎相互学习交流~</div></div><div class="sticky_layout"><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2025/07/08/Cursor%E4%B8%AA%E4%BA%BA%E4%BD%BF%E7%94%A8%E8%AE%B0%E5%BD%95/" title="Cursor个人使用记录"><img src="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Cursor个人使用记录"/></a><div class="content"><a class="title" href="/2025/07/08/Cursor%E4%B8%AA%E4%BA%BA%E4%BD%BF%E7%94%A8%E8%AE%B0%E5%BD%95/" title="Cursor个人使用记录">Cursor个人使用记录</a><time datetime="2025-07-08T09:08:34.000Z" title="发表于 2025-07-08 17:08:34">2025-07-08</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/07/08/hello-world/" title="Hello World"><img src="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Hello World"/></a><div class="content"><a class="title" href="/2025/07/08/hello-world/" title="Hello World">Hello World</a><time datetime="2025-07-08T06:20:40.474Z" title="发表于 2025-07-08 14:20:40">2025-07-08</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/11/08/%E6%B5%8B%E8%AF%95%E6%96%B0%E4%B8%BB%E9%A2%98/" title="测试新主题"><img src="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="测试新主题"/></a><div class="content"><a class="title" href="/2022/11/08/%E6%B5%8B%E8%AF%95%E6%96%B0%E4%B8%BB%E9%A2%98/" title="测试新主题">测试新主题</a><time datetime="2022-11-08T07:51:59.000Z" title="发表于 2022-11-08 15:51:59">2022-11-08</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/06/10/Godoc-%E5%AE%89%E8%A3%85%E4%B8%8E%E4%BD%BF%E7%94%A8/" title="Godoc 安装与使用"><img src="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Godoc 安装与使用"/></a><div class="content"><a class="title" href="/2022/06/10/Godoc-%E5%AE%89%E8%A3%85%E4%B8%8E%E4%BD%BF%E7%94%A8/" title="Godoc 安装与使用">Godoc 安装与使用</a><time datetime="2022-06-10T07:51:14.000Z" title="发表于 2022-06-10 15:51:14">2022-06-10</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/06/10/%E7%AE%80%E5%8D%95%E4%BD%BF%E4%BC%9A%E7%94%A8React/" title="简单使会用React"><img src="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="简单使会用React"/></a><div class="content"><a class="title" href="/2022/06/10/%E7%AE%80%E5%8D%95%E4%BD%BF%E4%BC%9A%E7%94%A8React/" title="简单使会用React">简单使会用React</a><time datetime="2022-06-10T07:44:12.000Z" title="发表于 2022-06-10 15:44:12">2022-06-10</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;2021 - 2025 By King</span></div><div class="footer_custom_text"><span>改变确实很难，但结果值得冒险</span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"></div><div class="aplayer no-destroy" data-id="6988686015" data-server="netease" data-type="playlist" data-fixed="true" data-autoplay="true" data-lrcType="-1"> </div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/metingjs/dist/Meting.min.js"></script><script>(() => {
+  const destroyAplayer = () => {
+    if (window.aplayers) {
+      for (let i = 0; i < window.aplayers.length; i++) {
+        if (!window.aplayers[i].options.fixed) {
+          window.aplayers[i].destroy()
+        }
+      }
+    }
+  }
+
+  const runMetingJS = () => {
+    typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+  }
+
+  btf.addGlobalFn('pjaxSend', destroyAplayer, 'destroyAplayer')
+  btf.addGlobalFn('pjaxComplete', loadMeting, 'runMetingJS')
+})()</script><script src="https://cdn.jsdelivr.net/npm/pjax/pjax.min.js"></script><script>(() => {
+  const pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+  window.pjax = new Pjax({
+    elements: 'a:not([target="_blank"])',
+    selectors: pjaxSelectors,
+    cacheBust: false,
+    analytics: false,
+    scrollRestoration: false
+  })
+
+  const triggerPjaxFn = (val) => {
+    if (!val) return
+    Object.values(val).forEach(fn => fn())
+  }
+
+  document.addEventListener('pjax:send', () => {
+    // removeEventListener
+    btf.removeGlobalFnEvent('pjaxSendOnce')
+    btf.removeGlobalFnEvent('themeChange')
+
+    // reset readmode
+    const $bodyClassList = document.body.classList
+    if ($bodyClassList.contains('read-mode')) $bodyClassList.remove('read-mode')
+
+    triggerPjaxFn(window.globalFn.pjaxSend)
+  })
+
+  document.addEventListener('pjax:complete', () => {
+    btf.removeGlobalFnEvent('pjaxCompleteOnce')
+    document.querySelectorAll('script[data-pjax]').forEach(item => {
+      const newScript = document.createElement('script')
+      const content = item.text || item.textContent || item.innerHTML || ""
+      Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+      newScript.appendChild(document.createTextNode(content))
+      item.parentNode.replaceChild(newScript, item)
+    })
+
+    triggerPjaxFn(window.globalFn.pjaxComplete)
+  })
+
+  document.addEventListener('pjax:error', e => {
+    if (e.request.status === 404) {
+      const usePjax = true
+      false
+        ? (usePjax ? pjax.loadUrl('/404.html') : window.location.href = '/404.html')
+        : window.location.href = e.request.responseURL
+    }
+  })
+})()</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
