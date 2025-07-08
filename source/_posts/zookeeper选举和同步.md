@@ -1,7 +1,12 @@
 ---
-title: zookeeper选举
-date: 2022-03-21 10:57:58
-tags: 网络
+title: zookeeper选举和同步
+date: 2021-02-22 10:28:17
+tags:
+- Zookeeper
+- 分布式
+- 选举
+- 同步
+categories: 技术
 ---
 ## 前言
 

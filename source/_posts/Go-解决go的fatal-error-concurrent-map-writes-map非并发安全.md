@@ -1,7 +1,11 @@
 ---
 title: 'Go-解决go的fatal error: concurrent map writes map非并发安全'
 date: 2021-07-06 11:13:18
-tags: GO
+tags:
+- Go
+- 并发
+- map
+categories: 技术
 ---
 
 >普及概念：

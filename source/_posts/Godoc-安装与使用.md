@@ -1,7 +1,10 @@
 ---
 title: Godoc 安装与使用
 date: 2022-06-10 15:51:14
-tags: Go
+tags:
+- Go
+- Godoc
+categories: 技术
 ---
 ## 简单操作：
 

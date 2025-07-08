@@ -1,7 +1,11 @@
 ---
 title: GO 控制结构if-else
 date: 2021-08-16 10:26:38
-tags: GO入门
+tags:
+- Go
+- if-else
+- 编程语言
+categories: 技术
 ---
 > 简单例子:
 

@@ -1,7 +1,11 @@
 ---
 title: MongoDB常见操作
 date: 2022-03-24 10:56:28
-tags: 知识点
+tags:
+- MongoDB
+- 数据库
+- NoSQL
+categories: 技术
 ---
 ## 评价查询操作符
 

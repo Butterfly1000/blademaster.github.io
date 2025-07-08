@@ -1,7 +1,11 @@
 ---
 title: mongoDB数据库查看工具
-date: 2021-10-08 13:45:23
-tags: 工具推荐
+date: 2021-02-04 16:11:36
+tags:
+- MongoDB
+- 数据库
+- 工具推荐
+categories: 技术
 ---
 
 ## 环境

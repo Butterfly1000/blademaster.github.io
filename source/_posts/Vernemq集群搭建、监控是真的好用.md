@@ -1,7 +1,12 @@
 ---
 title: Vernemq集群搭建、监控是真的好用
 date: 2022-03-24 15:55:29
-tags: MQTT
+tags:
+- VerneMQ
+- MQTT
+- 消息队列
+- 集群
+categories: 技术
 ---
 ## 安装
 

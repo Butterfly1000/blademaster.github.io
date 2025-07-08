@@ -1,7 +1,10 @@
 ---
 title: MQTT 协议是个啥？这篇文章告诉你！
 date: 2022-03-23 13:34:41
-tags: 网络
+tags:
+- 网络
+- MQTT
+categories: 技术
 ---
 ## 什么是 MQTT 协议
 

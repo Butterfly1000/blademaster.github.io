@@ -1,7 +1,11 @@
 ---
 title: GO 包package和import
 date: 2021-08-16 10:17:15
-tags: GO入门
+tags:
+- Go
+- package
+- import
+categories: 技术
 ---
 > 什么是package
 

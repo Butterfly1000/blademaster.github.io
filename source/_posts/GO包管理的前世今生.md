@@ -1,7 +1,11 @@
 ---
 title: GO包管理的前世今生
 date: 2021-10-08 11:13:59
-tags: GO
+tags:
+- Go
+- 包管理
+- 编程语言
+categories: 技术
 ---
 
 ## 早期的GO包管理(了解)

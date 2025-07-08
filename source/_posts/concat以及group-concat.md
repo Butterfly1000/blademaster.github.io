@@ -1,7 +1,11 @@
 ---
 title: concat以及group_concat
 date: 2021-03-22 19:28:22
-tags: mysql
+tags:
+- MySQL
+- 数据库
+- SQL
+categories: 技术
 ---
 
 >concat()函数

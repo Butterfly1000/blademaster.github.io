@@ -1,7 +1,10 @@
 ---
 title: Docker入门教程
 date: 2021-10-02 21:39:41
-tags: Docker
+tags:
+- Docker
+- 入门
+categories: 技术
 ---
 
 ## 安装Docker

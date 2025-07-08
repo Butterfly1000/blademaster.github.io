@@ -1,7 +1,10 @@
 ---
 title: Go-单元测试篇(简单)
 date: 2021-07-06 10:44:59
-tags: GO
+tags:
+- Go
+- 单元测试
+categories: 技术
 ---
 
 >参考文章

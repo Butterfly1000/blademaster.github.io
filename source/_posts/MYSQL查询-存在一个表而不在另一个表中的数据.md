@@ -1,7 +1,11 @@
 ---
 title: MYSQL查询~ 存在一个表而不在另一个表中的数据
 date: 2021-05-18 19:39:28
-tags: mysql
+tags:
+- MySQL
+- 数据库
+- SQL
+categories: 技术
 ---
 
 >业务场景：

@@ -1,7 +1,11 @@
 ---
 title: 扩展管理工具composer
-date: 2021-10-09 10:47:51
-tags: 知识点
+date: 2021-04-12 11:18:27
+tags:
+- PHP
+- Composer
+- 包管理
+categories: 技术
 ---
 
 ### 前言
@@ -275,7 +279,7 @@ Warning from https://mirrors.aliyun.com/composer: You are using an outdated vers
 
 执行composer self-update
 
-macOS: Installing composer fails with error “The ”https://getcomposer.org/versions“ file could not be downloaded: SSL operation failed with code 1”
+macOS: Installing composer fails with error "The "https://getcomposer.org/versions" file could not be downloaded: SSL operation failed with code 1"
 
 解决：
 php -i | grep php.ini

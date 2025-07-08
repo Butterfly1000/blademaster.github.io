@@ -1,7 +1,10 @@
 ---
 title: Go指针篇
 date: 2021-03-24 08:22:22
-tags: GO
+tags:
+- Go
+- 指针
+categories: 技术
 ---
 
 > 前言

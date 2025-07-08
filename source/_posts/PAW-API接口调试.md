@@ -1,7 +1,11 @@
 ---
 title: PAW API接口调试
 date: 2021-10-08 13:37:39
-tags: 工具推荐
+tags:
+- API
+- 工具推荐
+- Paw
+categories: 技术
 ---
 
 ## 推荐

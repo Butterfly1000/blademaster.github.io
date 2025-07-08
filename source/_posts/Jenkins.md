@@ -2,6 +2,9 @@
 title: Jenkins
 date: 2022-03-21 19:03:13
 tags:
+- Jenkins
+- CI/CD
+categories: 技术
 ---
 [超级详细！开发集成工具Jenkins使用教程](https://mp.weixin.qq.com/s/mPkhy7YvrYO_HnfL-rho3w)
 

@@ -1,7 +1,11 @@
 ---
 title: GO mod篇
 date: 2021-03-30 19:36:55
-tags: GO
+tags:
+- Go
+- mod
+- 包管理
+categories: 技术
 ---
 
 ## 三分钟掌握Go mod常用与高级操作

@@ -1,7 +1,12 @@
 ---
-title: swagger 部署(Mac)
-date: 2022-06-10 15:29:26
-tags: 工具推荐
+title: swagger-部署-Mac
+date: 2021-02-05 15:43:35
+tags:
+- Swagger
+- API
+- Mac
+- 环境配置
+categories: 技术
 ---
 
 ## 编辑(swagger-edit)

@@ -1,7 +1,11 @@
 ---
 title: Redis数据库查看工具
 date: 2021-10-08 13:45:37
-tags: 工具推荐
+tags:
+- Redis
+- 数据库
+- 工具推荐
+categories: 技术
 ---
 
 ## 工具

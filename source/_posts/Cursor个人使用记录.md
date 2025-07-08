@@ -1,7 +1,11 @@
 ---
 title: Cursor个人使用记录
 date: 2025-07-08 17:08:34
-tags: 知识点
+tags:
+- Cursor
+- AI编程
+- 工具使用
+categories: 技术
 ---
 
 ## 自定义mode

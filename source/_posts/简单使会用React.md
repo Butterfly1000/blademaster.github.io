@@ -1,7 +1,12 @@
 ---
 title: 简单使会用React
 date: 2022-06-10 15:44:12
-tags: 知识点
+tags:
+- React
+- 前端
+- JavaScript
+- Nginx
+categories: 技术
 ---
 ## 环境
 
@@ -84,7 +89,7 @@ Inside that directory, you can run several commands:
 
   npm run eject
     Removes this tool and copies build dependencies, configuration files
-    and scripts into the app directory. If you do this, you can’t go back!
+    and scripts into the app directory. If you do this, you can't go back!
 
 We suggest that you begin by typing:
 

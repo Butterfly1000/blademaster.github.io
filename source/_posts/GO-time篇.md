@@ -1,7 +1,10 @@
 ---
 title: GO time篇
 date: 2021-04-26 20:24:38
-tags: GO
+tags:
+- Go
+- time
+categories: 技术
 ---
 
 ### go Time篇

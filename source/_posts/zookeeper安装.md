@@ -1,7 +1,11 @@
 ---
 title: zookeeper安装
-date: 2022-03-21 11:26:14
-tags: 网络
+date: 2021-02-20 15:07:34
+tags:
+- Zookeeper
+- 分布式
+- 环境配置
+categories: 技术
 ---
 ### 安装
 

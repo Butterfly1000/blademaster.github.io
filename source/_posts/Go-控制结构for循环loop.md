@@ -1,7 +1,11 @@
 ---
 title: Go 控制结构for循环loop
 date: 2021-08-16 10:39:28
-tags: GO入门
+tags:
+- Go
+- "for"
+- 编程语言
+categories: 技术
 ---
 for循环是编程语言中一种循环语句，**for 是 Go 语言唯一的循环语句.Go 语言中并没有其他语言比如 C 语言中的 while 和 do while 循环.**
 

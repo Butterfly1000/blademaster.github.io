@@ -1,7 +1,10 @@
 ---
 title: Docker-部署gitlab
 date: 2021-10-02 22:16:10
-tags: Docker
+tags:
+- Docker
+- GitLab
+categories: 技术
 ---
 
 ### 一、前提条件

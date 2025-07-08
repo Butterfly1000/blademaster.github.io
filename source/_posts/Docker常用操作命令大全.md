@@ -1,7 +1,10 @@
 ---
 title: Docker常用操作命令大全
 date: 2021-08-17 14:30:37
-tags: Docker
+tags:
+- Docker
+- 命令行
+categories: 技术
 ---
 ## 环境
 

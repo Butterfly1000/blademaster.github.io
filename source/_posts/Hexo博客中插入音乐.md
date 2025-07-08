@@ -1,7 +1,10 @@
 ---
 title: Hexo博客中插入音乐
 date: 2021-08-03 15:07:05
-tags: 随笔
+tags:
+- Hexo
+- 音乐
+categories: 建站
 ---
 
 ### 成品

@@ -1,7 +1,11 @@
 ---
-title: hexo使用markdown图片无法显示问题(引用,亲测可用)
-date: 2021-07-13 10:56:15
-tags: 随笔
+title: hexo使用markdown图片无法显示问题
+date: 2021-02-04 15:58:19
+tags:
+- Hexo
+- Markdown
+- 博客
+categories: 技术
 ---
 
 hexo默认无法自动处理文章插入本地图片，需要通过扩展插件支持。
